@@ -1,0 +1,43 @@
+/* Sidebar */
+.sidebar {
+  padding: 20px;
+  background: #222;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.search-box {
+  display: flex;
+  align-items: center;
+  background: #333;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.search-box input {
+  background: transparent;
+  border: none;
+  color: white;
+  outline: none;
+  margin-left: 10px;
+  flex: 1;
+}
+.participant {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.participant:hover {
+  background: #444;
+}
+/* Participants List */
+.participant-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}

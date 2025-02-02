@@ -9,3 +9,9 @@ html {
   height: 100%;
   overflow: hidden;
 }
+.container {
+  /* display: flex; */
+  height: 100vh;
+  display: grid;
+  grid-template-columns: 20vw 1vw 79vw;
+}
