@@ -1,3 +1,14 @@
 .main-content {
-  width: 100%;
+  padding: 20px;
+  display: grid;
+  justify-content: center;
+  grid-template-columns: 1fr;
+  align-items: center;
+  text-align: center;
+  justify-items: center;
+}
+
+.distance-graph,
+.pace-graph {
+  width: 90%; /* Make the graph take most of the container's width */
 }

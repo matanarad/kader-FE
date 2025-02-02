@@ -92,7 +92,10 @@ function App() {
         activeParticipants={filteredActiveParticipants}
       />
       <div></div>
-      <MainContent />
+      <MainContent
+        name={activeParticipants[0]?.name}
+        tagId={`${activeParticipants[0]?.tagNumber}`}
+      />
     </div>
   );
 }
