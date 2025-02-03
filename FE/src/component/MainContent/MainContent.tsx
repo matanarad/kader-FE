@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { getUserData } from "../../api";
 import {
   LineChart,
   Line,
@@ -18,8 +19,8 @@ interface DataItem {
 }
 
 interface MainContentProps {
-  name: string | undefined;
-  tagId: string | undefined;
+  name: string;
+  tagId: number;
 }
 
 const MainContent: React.FC<MainContentProps> = ({ name, tagId }) => {
@@ -30,12 +31,12 @@ const MainContent: React.FC<MainContentProps> = ({ name, tagId }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Replace with your actual API endpoint
-        const response = await axios.get(
-          `http://localhost:8000/data?name=${name}&tagId=${tagId}`
-        );
-
-        setDataDict(response.data); // Assuming the response returns the dataDict array
+        let data = await getUserData(name, tagId);
+        if (data !== null) {
+          setDataDict(data);
+        } else {
+          setDataDict([]);
+        }
       } catch (error) {
         console.error("Error fetching data:", error);
         setDataDict([]);
@@ -68,44 +69,43 @@ const MainContent: React.FC<MainContentProps> = ({ name, tagId }) => {
     distance: item.distance,
     pace: paceData[index],
   }));
+  const formatTime = (seconds: string | number) => {
+    const minutes = Math.floor(Number(seconds) / 60);
+    const secs = Number(seconds) % 60;
+    return `${minutes}:${secs.toString().padStart(2, "0")}`;
+  };
 
+  const formattedData = data.map((item) => ({
+    ...item,
+    timeInSeconds:
+      parseInt(item.time.split(":")[0]) * 60 +
+      parseInt(item.time.split(":")[1]),
+  }));
   return (
     <div className="main-content">
       {dataDict.length > 0 ? (
         <>
           <div className="distance-graph">
             <h3>Distance Over Time</h3>
-            <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={data}>
+            <ResponsiveContainer width="100%" height={600}>
+              <LineChart data={formattedData}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="time" />
-                <YAxis />
-                <Tooltip />
+                <XAxis dataKey="distance" />
+                <YAxis
+                  dataKey="timeInSeconds"
+                  tickFormatter={formatTime}
+                  tickCount={formattedData.length}
+                />
+
+                <Tooltip
+                  labelFormatter={(label) => `Distance: ${label}m`}
+                  formatter={(value: any) => [formatTime(value), "Time"]}
+                />
                 <Line
                   type="monotone"
-                  dataKey="distance"
+                  dataKey="timeInSeconds"
                   stroke="#4bc0c0"
                   fill="#4bc0c0"
-                  fillOpacity={0.2}
-                  strokeWidth={3}
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-
-          <div className="pace-graph">
-            <h3>{"Pace Over Time (min/km)"}</h3>
-            <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={data}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="time" />
-                <YAxis />
-                <Tooltip />
-                <Line
-                  type="monotone"
-                  dataKey="pace"
-                  stroke="#9966ff"
-                  fill="#9966ff"
                   fillOpacity={0.2}
                   strokeWidth={3}
                 />

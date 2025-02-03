@@ -44,7 +44,7 @@ const participants = [
       { time: "5:00", sensor: 1 },
       { time: "5:40", sensor: 2 },
       { time: "6:00", sensor: 1 },
-      { time: "6:40", sensor: 2 },
+      { time: "16:40", sensor: 2 },
     ],
   },
   {
@@ -65,7 +65,7 @@ const participants = [
       { time: "6:21", sensor: 1 },
       { time: "7:20", sensor: 2 },
       { time: "7:45", sensor: 1 },
-      { time: "8:34", sensor: 2 },
+      { time: "18:34", sensor: 2 },
     ],
   },
 ];
@@ -93,8 +93,12 @@ function App() {
       />
       <div></div>
       <MainContent
-        name={activeParticipants[0]?.name}
-        tagId={`${activeParticipants[0]?.tagNumber}`}
+        name={activeParticipants[0]?.name ? activeParticipants[0].name : "None"}
+        tagId={
+          activeParticipants[0]?.tagNumber
+            ? activeParticipants[0].tagNumber
+            : -1
+        }
       />
     </div>
   );
