@@ -13,4 +13,16 @@ const getUserData = async (name: string, tagId: number) => {
   }
 };
 
-export { getUserData };
+const getUserHistoryData = async (name: string) => {
+  try {
+    // Replace with your actual API endpoint
+    const response = await axios.get(
+      `http://localhost:8000/dataHistory?name=${name}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    return null;
+  }
+};
+export { getUserData, getUserHistoryData };
