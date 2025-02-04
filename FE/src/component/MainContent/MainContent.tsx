@@ -11,10 +11,10 @@ const formatSecondsToTime = (seconds: number): string => {
   const remainingSeconds = seconds % 60;
   return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
 };
-const MainContent: React.FC<DistanceGraphProps> = ({ name, tagId }) => {
-  const [activeButton, setActiveButton] = useState<"history" | "current">(
-    "history"
-  );
+const MainContent: React.FC<DistanceGraphProps> = ({ name }) => {
+  const [activeButton, setActiveButton] = useState<
+    "history" | "current" | "live"
+  >("current");
   const [distanceGraphYAxis, setDistanceGraphYAxis] = useState<
     number[][] | undefined
   >(undefined);
@@ -108,6 +108,13 @@ const MainContent: React.FC<DistanceGraphProps> = ({ name, tagId }) => {
           disabled={activeButton === "current"} // Disable when active
         >
           Current Workout
+        </button>
+        <button
+          className={`toggle-button ${activeButton === "live" ? "active" : ""}`}
+          onClick={() => setActiveButton("live")}
+          disabled={activeButton === "live"} // Disable when active
+        >
+          Live
         </button>
       </div>
     </div>
