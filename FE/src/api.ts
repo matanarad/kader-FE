@@ -1,11 +1,9 @@
 import axios from "axios";
 
-const getUserData = async (name: string, tagId: number) => {
+const getUserData = async (name: string) => {
   try {
     // Replace with your actual API endpoint
-    const response = await axios.get(
-      `http://localhost:8000/data?name=${name}&tagId=${tagId}`
-    );
+    const response = await axios.get(`http://localhost:8000/data?name=${name}`);
     return response.data;
   } catch (error) {
     console.error("Error fetching data:", error);
