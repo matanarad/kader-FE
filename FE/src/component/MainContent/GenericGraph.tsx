@@ -18,6 +18,7 @@ interface GenericGraphProps {
   yAxisLabel?: string;
   xAxisLabel?: string;
   tickFormatter?: (value: number) => string;
+  yAxisTicks?: number[];
 }
 
 const GenericGraph: React.FC<GenericGraphProps> = ({
@@ -28,12 +29,13 @@ const GenericGraph: React.FC<GenericGraphProps> = ({
   xAxisLabel,
   legendData,
   tickFormatter,
+  yAxisTicks,
 }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [chartData, setChartData] = useState<object[]>([]);
 
   useEffect(() => {
-    console.log(xAxisData, yAxisData);
+    // console.log(xAxisData, yAxisData);
 
     if (xAxisData && yAxisData && yAxisData.length > 0) {
       // Format data to match Recharts' expectations
@@ -71,6 +73,7 @@ const GenericGraph: React.FC<GenericGraphProps> = ({
           <YAxis
             label={{ value: yAxisLabel, angle: -90, position: "insideLeft" }}
             tickFormatter={tickFormatter}
+            ticks={yAxisTicks} // Define fixed labels
           />
           <Legend verticalAlign="bottom" height={36} />
 

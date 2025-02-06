@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import { SidebarProps } from "../../interface";
 import SearchBox from "./SearchBox";
 import ParticipantList from "./ParticipantList";
-import { getParticipantByTagNumber } from "../../utils/utils";
 
 const Sidebar = ({
   participants,
@@ -16,14 +15,9 @@ const Sidebar = ({
 
   useEffect(() => {
     const filtered = participants.filter((p) =>
-      p.name.toLowerCase().includes(searchTerm.toLowerCase())
+      p.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredParticipants(filtered);
-    setActiveParticipants(
-      activeParticipants.filter((p) =>
-        filtered.some((fp) => fp.tagNumber === p.tagNumber)
-      )
-    );
   }, [searchTerm, participants, setActiveParticipants]);
 
   return (
@@ -33,9 +27,6 @@ const Sidebar = ({
         participants={filteredParticipants}
         activeParticipants={activeParticipants}
         setActiveParticipants={setActiveParticipants}
-        getParticipantByTagNumber={(tagNumber) =>
-          getParticipantByTagNumber(tagNumber, activeParticipants)
-        }
       />
     </div>
   );

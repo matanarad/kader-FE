@@ -1,21 +1,11 @@
-interface Participant {
-  name: string;
-  age: number;
-  tagNumber: number;
-  paceData: Pace[];
-}
 interface Pace {
   time: string;
   sensor: number;
 }
 
-interface MainContentProps {
-  activeParticipants: Participant[] | [];
-}
-
 interface SidebarProps {
-  participants: Participant[];
-  setActiveParticipants: (participants: Participant[]) => void;
-  activeParticipants: Participant[] | [];
+  participants: string[];
+  setActiveParticipants: (participants: string[]) => void;
+  activeParticipants: string[] | [];
 }
-export type { Participant, Pace, MainContentProps, SidebarProps };
+export type { Pace, SidebarProps };

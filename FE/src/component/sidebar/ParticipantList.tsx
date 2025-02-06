@@ -1,18 +1,15 @@
-import { FC, useState } from "react";
-import { Participant } from "../../interface";
+import React from "react";
 
 interface ParticipantListProps {
-  participants: Participant[];
-  activeParticipants: Participant[];
-  setActiveParticipants: (participants: Participant[]) => void;
-  getParticipantByTagNumber: (tagNumber: number) => Participant | undefined;
+  participants: string[];
+  activeParticipants: string[];
+  setActiveParticipants: (participants: string[]) => void;
 }
 
-const ParticipantList: FC<ParticipantListProps> = ({
+const ParticipantList: React.FC<ParticipantListProps> = ({
   participants,
   activeParticipants,
   setActiveParticipants,
-  getParticipantByTagNumber,
 }) => {
   return (
     <div className="participant-list">
@@ -21,30 +18,15 @@ const ParticipantList: FC<ParticipantListProps> = ({
           <div
             className="participant"
             style={{
-              backgroundColor:
-                getParticipantByTagNumber(p.tagNumber) !== undefined
-                  ? "#444"
-                  : "",
+              backgroundColor: p === activeParticipants[0] ? "#444" : "",
             }}
             key={index}
             onClick={() => {
-              if (getParticipantByTagNumber(p.tagNumber) === undefined) {
-                // setActiveParticipants([...(activeParticipants || []), p]);
-                setActiveParticipants([p]);
-              } else {
-                setActiveParticipants(
-                  activeParticipants.filter(
-                    (participant) => participant.tagNumber !== p.tagNumber
-                  )
-                );
-              }
+              setActiveParticipants([p]);
             }}
           >
             <div>
-              <div>{p.name}</div>
-              <small>
-                Age {p.age}, tag #{p.tagNumber}
-              </small>
+              <div>{p}</div>
             </div>
           </div>
         );
