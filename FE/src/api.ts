@@ -12,10 +12,12 @@ const getUsersList = async () => {
   }
 };
 
-const getUserData = async (name: string) => {
+const getUserData = async (name: string, distance: number) => {
   try {
     // Replace with your actual API endpoint
-    const response = await axios.get(`${URL}/data?name=${name}`);
+    const response = await axios.get(
+      `${URL}/data?name=${name}&distance=${distance}`
+    );
     return response.data;
   } catch (error) {
     console.error("Error fetching data:", error);
@@ -23,10 +25,12 @@ const getUserData = async (name: string) => {
   }
 };
 
-const getUserHistoryData = async (name: string) => {
+const getUserHistoryData = async (name: string, distance: number) => {
   try {
     // Replace with your actual API endpoint
-    const response = await axios.get(`${URL}/dataHistory?name=${name}`);
+    const response = await axios.get(
+      `${URL}/dataHistory?name=${name}&distance=${distance}`
+    );
     return response.data;
   } catch (error) {
     console.error("Error fetching data:", error);

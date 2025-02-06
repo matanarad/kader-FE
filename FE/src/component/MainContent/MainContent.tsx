@@ -29,13 +29,14 @@ const MainContent: React.FC<MainContentProps> = ({ name }) => {
   const [historyGraphDates, setHistoryGraphDates] = useState<
     string[] | undefined
   >(undefined);
+  const [distance, setDistance] = useState<number>(200);
 
   // Fetch data using axios based on name and tagId
   useEffect(() => {
     if (activeButton == "history") {
       const fetchHistoryByName = async () => {
         try {
-          let data = await getUserHistoryData(name);
+          let data = await getUserHistoryData(name, distance);
           if (data !== null) {
             console.log(data);
             setHistoryGraphYAxis(data.YAxis);
@@ -57,7 +58,7 @@ const MainContent: React.FC<MainContentProps> = ({ name }) => {
     } else if (activeButton == "current") {
       const fetchByName = async () => {
         try {
-          let data = await getUserData(name);
+          let data = await getUserData(name, distance);
 
           if (data !== null) {
             setDistanceGraphYAxis(data.YAxis);
@@ -125,6 +126,20 @@ const MainContent: React.FC<MainContentProps> = ({ name }) => {
 
   return (
     <div className="main-content">
+      {/* <input className={`toggle-button`}>Current Workout</input> */}
+      <div style={{ textAlign: "start" }}>
+        <div>distance to sensor:</div>
+        <input
+          type="number"
+          value={distance}
+          onChange={(e) => {
+            setDistance(Number(e.target.value));
+          }}
+          placeholder={"Enter distance..."}
+          className="toggle-button"
+          style={{ margin: "0" }}
+        />
+      </div>
       {activeButton === "current" ? (
         <GenericGraph
           name="Distance Over Time"

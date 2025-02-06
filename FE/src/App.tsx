@@ -9,6 +9,7 @@ function App() {
     const getUsers = async () => {
       let data = await getUsersList();
       setParticipants(data);
+      setActiveParticipants([data[0]]);
     };
     getUsers();
   }, []);
