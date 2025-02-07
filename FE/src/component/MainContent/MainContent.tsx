@@ -99,18 +99,6 @@ const MainContent: React.FC<MainContentProps> = ({ name }) => {
       fetchData();
     }
   }, [name, activeButton, distance, totalDistance]);
-  useEffect(() => {
-    if (sseRef.current) {
-      closeSSE(sseRef.current);
-      openSSE(distance, totalDistance, (data) => {
-        setDistanceGraphXAxis(data["XAxis"]);
-        setDistanceGraphYAxis(data["YAxis"]);
-        setHistoryGraphDates(data["names"]);
-      }).then((sse) => {
-        sseRef.current = sse;
-      });
-    }
-  }, [totalDistance]); // This effect will run when totalDistance changes
 
   return (
     <div className="main-content">
