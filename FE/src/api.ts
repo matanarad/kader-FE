@@ -38,15 +38,53 @@ const getUserHistoryData = async (name: string, distance: number) => {
   }
 };
 
-const getLiveBaseData = async (name: string) => {
+// const getLiveBaseData = async (name: string) => {
+//   try {
+//     // Replace with your actual API endpoint
+//     const response = await axios.get(`${URL}/live?name=${name}`);
+//     return response.data;
+//   } catch (error) {
+//     console.error("Error fetching data:", error);
+//     return null;
+//   }
+// };
+
+const openSSE = async (
+  distance: number,
+  totalDistance: number,
+  onMessage: (data: any) => void
+) => {
   try {
-    // Replace with your actual API endpoint
-    const response = await axios.get(`${URL}/live?name=${name}`);
-    return response.data;
+    const url = `${URL}/stream?distance=${distance}&totalDistance=${totalDistance}`;
+    const eventSource = new EventSource(url);
+
+    eventSource.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      onMessage(data);
+    };
+
+    eventSource.onerror = (error) => {
+      console.error("SSE error:", error);
+      eventSource.close(); // Ensure connection is closed on error
+    };
+
+    eventSource.addEventListener("close", () => {
+      console.log("SSE stream closed.");
+      eventSource.close();
+    });
+
+    return eventSource;
   } catch (error) {
-    console.error("Error fetching data:", error);
+    console.error("Error opening SSE:", error);
     return null;
   }
 };
 
-export { getUserData, getUserHistoryData, getLiveBaseData, getUsersList };
+const closeSSE = (eventSource: EventSource | null) => {
+  if (eventSource) {
+    eventSource.close();
+    console.log("SSE connection closed.");
+  }
+};
+
+export { getUserData, getUserHistoryData, getUsersList, openSSE, closeSSE };

@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { getUserData, getUserHistoryData, getLiveBaseData } from "../../api";
+import React, { useState, useEffect, useRef } from "react";
+import { getUserData, getUserHistoryData, closeSSE, openSSE } from "../../api";
 import GenericGraph from "./GenericGraph";
 import "./MainContent.css";
 interface MainContentProps {
@@ -30,99 +30,87 @@ const MainContent: React.FC<MainContentProps> = ({ name }) => {
     string[] | undefined
   >(undefined);
   const [distance, setDistance] = useState<number>(200);
+  const [totalDistance, setTotalDistance] = useState<number>(2000);
 
-  // Fetch data using axios based on name and tagId
+  const sseRef = useRef<EventSource | null>(null);
+
   useEffect(() => {
-    if (activeButton == "history") {
-      const fetchHistoryByName = async () => {
-        try {
-          let data = await getUserHistoryData(name, distance);
-          if (data !== null) {
-            console.log(data);
-            setHistoryGraphYAxis(data.YAxis);
-            setHistoryGraphXAxis(data.XAxis);
-            setHistoryGraphDates(data.dates);
-          } else {
-            setHistoryGraphYAxis(undefined);
-            setHistoryGraphXAxis(undefined);
-            setHistoryGraphDates(undefined);
-          }
-        } catch (error) {
-          console.error("Error fetching history data:", error);
-          setHistoryGraphYAxis(undefined);
-          setHistoryGraphXAxis(undefined);
-          setHistoryGraphDates(undefined);
-        }
-      };
-      fetchHistoryByName();
-    } else if (activeButton == "current") {
-      const fetchByName = async () => {
-        try {
-          let data = await getUserData(name, distance);
+    if (activeButton === "live") {
+      setDistanceGraphXAxis(
+        Array.from(
+          { length: Math.floor(totalDistance / distance) + 1 },
+          (_, i) => i * distance
+        )
+      );
 
-          if (data !== null) {
-            setDistanceGraphYAxis(data.YAxis);
-            setDistanceGraphXAxis(data.XAxis);
-          } else {
-            setDistanceGraphYAxis(undefined);
-            setDistanceGraphXAxis(undefined);
-          }
-        } catch (error) {
-          console.error("Error fetching distance data:", error);
-          setDistanceGraphYAxis(undefined);
-          setDistanceGraphXAxis(undefined);
-        }
-      };
-      fetchByName();
-    } else if (activeButton == "live") {
-      const fetchLiveData = async () => {
-        try {
-          let data = await getLiveBaseData(name);
-          if (data !== null) {
-            setDistanceGraphYAxis([[]]);
-            setDistanceGraphXAxis(data);
-          } else {
-            setDistanceGraphXAxis(undefined);
-          }
-        } catch (error) {
-          console.error("Error fetching distance data:", error);
-          setDistanceGraphXAxis(undefined);
-        }
-      };
-      fetchLiveData();
-      // WebSocket Logic
-      const ws = new WebSocket(`ws://localhost:8000/ws?name=${name}`);
+      // Open SSE connection when live is selected
+      openSSE(distance, totalDistance, (data) => {
+        setDistanceGraphXAxis(data["XAxis"]);
+        setDistanceGraphYAxis(data["YAxis"]);
+        setHistoryGraphDates(data["names"]);
+      }).then((sse) => {
+        // Store SSE connection in ref
+        sseRef.current = sse;
+      });
 
-      ws.onopen = () => {
-        console.log("WebSocket connected");
-      };
-
-      ws.onmessage = (event) => {
-        const message = JSON.parse(event.data);
-
-        if (message.YAxis !== undefined) {
-          setDistanceGraphYAxis(message.YAxis);
-          // setDistanceGraphXAxis(message.XAxis);
-
-          setHistoryGraphDates(message.names);
-        } else {
-          console.error("WebSocket Error:", message.error);
-        }
-      };
-
-      ws.onclose = () => {
-        console.log("WebSocket closed");
-      };
-
-      ws.onerror = (error) => {
-        console.error("WebSocket Error:", error);
-      };
-
+      // Cleanup function: Close SSE when component unmounts or when the button is switched
       return () => {
-        ws.close(); // Cleanup WebSocket when component updates/unmounts
+        if (sseRef.current) {
+          closeSSE(sseRef.current); // Close the SSE connection on cleanup
+          sseRef.current = null; // Reset ref
+        }
       };
+    } else {
+      // Close SSE when switching away from "live"
+      if (sseRef.current) {
+        closeSSE(sseRef.current);
+        sseRef.current = null;
+      }
+
+      // Fetch history or current data based on the selected button
+      const fetchData = async () => {
+        try {
+          if (activeButton === "history") {
+            let data = await getUserHistoryData(name, distance);
+            if (data) {
+              setHistoryGraphYAxis(data.YAxis);
+              setHistoryGraphXAxis(data.XAxis);
+              setHistoryGraphDates(data.dates);
+            } else {
+              setHistoryGraphYAxis(undefined);
+              setHistoryGraphXAxis(undefined);
+              setHistoryGraphDates(undefined);
+            }
+          } else if (activeButton === "current") {
+            let data = await getUserData(name, distance);
+            if (data) {
+              setDistanceGraphYAxis(data.YAxis);
+              setDistanceGraphXAxis(data.XAxis);
+            } else {
+              setDistanceGraphYAxis(undefined);
+              setDistanceGraphXAxis(undefined);
+            }
+          }
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
+      };
+
+      fetchData();
     }
-  }, [name, activeButton]);
+  }, [name, activeButton, distance, totalDistance]);
+  useEffect(() => {
+    if (sseRef.current) {
+      closeSSE(sseRef.current);
+      openSSE(distance, totalDistance, (data) => {
+        setDistanceGraphXAxis(data["XAxis"]);
+        setDistanceGraphYAxis(data["YAxis"]);
+        setHistoryGraphDates(data["names"]);
+      }).then((sse) => {
+        sseRef.current = sse;
+      });
+    }
+  }, [totalDistance]); // This effect will run when totalDistance changes
 
   return (
     <div className="main-content">
@@ -139,6 +127,23 @@ const MainContent: React.FC<MainContentProps> = ({ name }) => {
           className="toggle-button"
           style={{ margin: "0" }}
         />
+        {activeButton === "live" ? (
+          <>
+            <div>distance to sensor:</div>
+            <input
+              type="number"
+              value={totalDistance}
+              onChange={(e) => {
+                setTotalDistance(Number(e.target.value));
+              }}
+              placeholder={"Enter Total distance..."}
+              className="toggle-button"
+              style={{ margin: "0" }}
+            />
+          </>
+        ) : (
+          ""
+        )}
       </div>
       {activeButton === "current" ? (
         <GenericGraph
