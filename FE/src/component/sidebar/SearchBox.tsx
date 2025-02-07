@@ -10,7 +10,7 @@ const SearchBox: FC<SearchBoxProps> = ({ searchTerm, setSearchTerm }) => {
     <div className="search-box">
       <input
         type="text"
-        placeholder="Search participants"
+        placeholder="Search..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
       />

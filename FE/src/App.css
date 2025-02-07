@@ -13,5 +13,5 @@ html {
   /* display: flex; */
   height: 100vh;
   display: grid;
-  grid-template-columns: 20vw 1vw 79vw;
+  grid-template-columns: 6vw 1vw 93vw;
 }

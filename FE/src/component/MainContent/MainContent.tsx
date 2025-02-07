@@ -1,5 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { getUserData, getUserHistoryData, closeSSE, openSSE } from "../../api";
+import LiveSettings from "../GraphSettings/LiveSettings";
+import HistorySettings from "../GraphSettings/HistorySettings";
+import CurrentSettings from "../GraphSettings/CurrentSettings";
 import GenericGraph from "./GenericGraph";
 import "./MainContent.css";
 interface MainContentProps {
@@ -104,68 +107,53 @@ const MainContent: React.FC<MainContentProps> = ({ name }) => {
 
   return (
     <div className="main-content">
-      {/* <input className={`toggle-button`}>Current Workout</input> */}
-      <div style={{ textAlign: "start" }}>
-        <div>distance to sensor:</div>
-        <input
-          type="number"
-          value={distance}
-          onChange={(e) => {
-            setDistance(Number(e.target.value));
-          }}
-          placeholder={"Enter distance..."}
-          className="toggle-button"
-          style={{ margin: "0" }}
+      {activeButton === "live" ? (
+        <LiveSettings
+          setTotalDistance={setTotalDistance}
+          totalDistance={totalDistance}
+          distance={distance}
+          setDistance={setDistance}
         />
-        {activeButton === "live" ? (
-          <>
-            <div>distance to sensor:</div>
-            <input
-              type="number"
-              value={totalDistance}
-              onChange={(e) => {
-                setTotalDistance(Number(e.target.value));
-              }}
-              placeholder={"Enter Total distance..."}
-              className="toggle-button"
-              style={{ margin: "0" }}
-            />
-          </>
-        ) : activeButton === "current" ? (
-          <>
-            <div>set view date:</div>
-            <input
-              type="date"
-              value={dateToView.toISOString().split("T")[0]}
-              onChange={(e) => {
-                setDateToView(new Date(e.target.value));
-              }}
-              // placeholder={"Enter Total distance..."}
-              className="toggle-button"
-              style={{ margin: "0" }}
-            />
-          </>
-        ) : (
-          ""
-        )}
-      </div>
-      {activeButton === "current" ? (
-        <GenericGraph
-          name="Distance Over Time"
-          xAxisData={distanceGraphXAxis}
-          yAxisData={distanceGraphYAxis}
-          legendData={[name]}
-          tickFormatter={formatSecondsToTime}
+      ) : activeButton === "current" ? (
+        <CurrentSettings
+          distance={distance}
+          setDistance={setDistance}
+          setDateToView={setDateToView}
+          dateToView={dateToView.toISOString().split("T")[0]}
         />
       ) : activeButton === "history" ? (
-        <GenericGraph
-          name={`${name} Over Time`}
-          xAxisData={historyGraphXAxis}
-          yAxisData={historyGraphYAxis}
-          legendData={historyGraphDates}
-          tickFormatter={formatSecondsToTime}
-        />
+        <HistorySettings distance={distance} setDistance={setDistance} />
       ) : (
+        ""
+      )}
+      {activeButton === "current" ? (
+        (distanceGraphXAxis ?? []).length > 0 &&
+        (distanceGraphYAxis?.[0]?.length ?? 0) > 0 ? (
+          <GenericGraph
+            name="Distance Over Time"
+            xAxisData={distanceGraphXAxis}
+            yAxisData={distanceGraphYAxis}
+            legendData={[name]}
+            tickFormatter={formatSecondsToTime}
+          />
+        ) : (
+          "Data not found Try different date"
+        )
+      ) : activeButton === "history" ? (
+        (historyGraphXAxis ?? []).length > 0 &&
+        (historyGraphYAxis?.[0]?.length ?? 0) > 0 ? (
+          <GenericGraph
+            name={`${name} Over Time`}
+            xAxisData={historyGraphXAxis}
+            yAxisData={historyGraphYAxis}
+            legendData={historyGraphDates}
+            tickFormatter={formatSecondsToTime}
+          />
+        ) : (
+          "Data not found"
+        )
+      ) : (distanceGraphXAxis ?? []).length > 0 &&
+        (distanceGraphYAxis?.[0]?.length ?? 0) > 0 ? (
         <GenericGraph
           name={`live view`}
           xAxisData={distanceGraphXAxis}
@@ -174,6 +162,8 @@ const MainContent: React.FC<MainContentProps> = ({ name }) => {
           yAxisTicks={[0, 60, 120, 180, 240, 300, 360]}
           tickFormatter={formatSecondsToTime}
         />
+      ) : (
+        "Data not found"
       )}
 
       {/* Toggle Buttons at the bottom */}
