@@ -31,6 +31,7 @@ const MainContent: React.FC<MainContentProps> = ({ name }) => {
   >(undefined);
   const [distance, setDistance] = useState<number>(200);
   const [totalDistance, setTotalDistance] = useState<number>(2000);
+  const [dateToView, setDateToView] = useState<Date>(new Date());
 
   const sseRef = useRef<EventSource | null>(null);
 
@@ -82,7 +83,8 @@ const MainContent: React.FC<MainContentProps> = ({ name }) => {
               setHistoryGraphDates(undefined);
             }
           } else if (activeButton === "current") {
-            let data = await getUserData(name, distance);
+            let data = await getUserData(name, distance, dateToView);
+            console.log(data);
             if (data) {
               setDistanceGraphYAxis(data.YAxis);
               setDistanceGraphXAxis(data.XAxis);
@@ -98,7 +100,7 @@ const MainContent: React.FC<MainContentProps> = ({ name }) => {
 
       fetchData();
     }
-  }, [name, activeButton, distance, totalDistance]);
+  }, [name, activeButton, distance, totalDistance, dateToView]);
 
   return (
     <div className="main-content">
@@ -125,6 +127,20 @@ const MainContent: React.FC<MainContentProps> = ({ name }) => {
                 setTotalDistance(Number(e.target.value));
               }}
               placeholder={"Enter Total distance..."}
+              className="toggle-button"
+              style={{ margin: "0" }}
+            />
+          </>
+        ) : activeButton === "current" ? (
+          <>
+            <div>set view date:</div>
+            <input
+              type="date"
+              value={dateToView.toISOString().split("T")[0]}
+              onChange={(e) => {
+                setDateToView(new Date(e.target.value));
+              }}
+              // placeholder={"Enter Total distance..."}
               className="toggle-button"
               style={{ margin: "0" }}
             />
