@@ -8,6 +8,7 @@ const Sidebar = ({
   participants,
   setActiveParticipants,
   activeParticipants,
+  activeButton,
 }: SidebarProps) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredParticipants, setFilteredParticipants] =
@@ -24,6 +25,7 @@ const Sidebar = ({
     <div className="sidebar">
       <SearchBox searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
       <ParticipantList
+        activeButton={activeButton}
         participants={filteredParticipants}
         activeParticipants={activeParticipants}
         setActiveParticipants={setActiveParticipants}

@@ -55,6 +55,17 @@ const GenericGraph: React.FC<GenericGraphProps> = ({
   if (loading) {
     return <div>Loading...</div>;
   }
+  // Helper function to generate a color based on the name
+  const getColorForName = (name: string) => {
+    name = name.split(" ")[0];
+    // Simple hash function to map names to colors
+    let hash = 0;
+    for (let i = 0; i < name.length; i++) {
+      hash = name.charCodeAt(i) + ((hash << 6) - hash);
+    }
+    const color = (hash & 0x00ffffff).toString(16).padStart(6, "0");
+    return `#${color}`; // Convert hash to a color
+  };
 
   return (
     <div className="distance-graph">
@@ -77,17 +88,25 @@ const GenericGraph: React.FC<GenericGraphProps> = ({
           />
           <Legend verticalAlign="bottom" height={36} />
 
-          {yAxisData?.map((_, index) => (
-            <Line
-              key={index}
-              type="monotone"
-              dataKey={`time_${index}`}
-              stroke={["#4bc0c0", "#ff7300", "#8884d8", "#82ca9d"][index % 4]} // Multiple colors
-              fillOpacity={0.2}
-              strokeWidth={3}
-              name={legendData?.[index] ?? `Line ${index + 1}`}
-            />
-          ))}
+          {yAxisData?.map((_, index) => {
+            // Get the name associated with this line
+            const legendName = legendData?.[index] ?? `Line ${index + 1}`;
+
+            // Use the same color for lines with the same name
+            const color = getColorForName(legendName);
+
+            return (
+              <Line
+                key={index}
+                type="monotone"
+                dataKey={`time_${index}`}
+                stroke={color} // Use the calculated color
+                fillOpacity={0.2}
+                strokeWidth={3}
+                name={legendName}
+              />
+            );
+          })}
         </LineChart>
       </ResponsiveContainer>
     </div>

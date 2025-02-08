@@ -13,17 +13,20 @@ const getUsersList = async () => {
 };
 
 const getUserData = async (
-  name: string,
+  names: string[],
   distance: number,
   dateToView: Date
 ) => {
   try {
-    // Replace with your actual API endpoint
-    const response = await axios.get(
-      `${URL}/data?name=${name}&distance=${distance}&dateToView=${
-        dateToView.toISOString().split("T")[0]
-      }`
-    );
+    const queryParams = new URLSearchParams({
+      distance: distance.toString(),
+      dateToView: dateToView.toISOString().split("T")[0],
+    });
+
+    // Append names as multiple parameters (if supported)
+    names.forEach((name) => queryParams.append("name", name));
+
+    const response = await axios.get(`${URL}/data?${queryParams.toString()}`);
     return response.data;
   } catch (error) {
     console.error("Error fetching data:", error);
