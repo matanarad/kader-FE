@@ -142,7 +142,7 @@ const MainContent: React.FC<MainContentProps> = ({
         (historyGraphXAxis ?? []).length > 0 &&
         (historyGraphYAxis?.[0]?.length ?? 0) > 0 ? (
           <GenericGraph
-            name={`${name} Over Time`}
+            name={`${names[0]} History`}
             xAxisData={historyGraphXAxis}
             yAxisData={historyGraphYAxis}
             legendData={historyGraphDates}

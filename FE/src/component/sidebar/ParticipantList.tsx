@@ -31,9 +31,9 @@ const ParticipantList: React.FC<ParticipantListProps> = ({
                     : [...activeParticipants, p] // Add if not exists
                 );
               } else {
-                alert(
-                  "Cant select more the one player when looking on history"
-                );
+                // alert(
+                //   "Cant select more the one player when looking on history"
+                // );
                 setActiveParticipants([p]);
               }
             }}
