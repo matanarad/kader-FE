@@ -38,8 +38,6 @@ const MainContent: React.FC<MainContentProps> = ({
   >(undefined);
   const [distance, setDistance] = useState<number>(200);
   const [totalDistance, setTotalDistance] = useState<number>(2000);
-  const [dateToView, setDateToView] = useState<Date>(new Date());
-  const [namesPerLine, setNamesPerLine] = useState<string[]>([]);
 
   const sseRef = useRef<EventSource | null>(null);
 
@@ -122,7 +120,7 @@ const MainContent: React.FC<MainContentProps> = ({
 
       fetchData();
     }
-  }, [names, activeButton, distance, totalDistance, dateToView]);
+  }, [names, activeButton, distance, totalDistance]);
 
   return (
     <div className="main-content">
