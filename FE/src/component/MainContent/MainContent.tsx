@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { getUserData, getUserHistoryData, closeSSE, openSSE } from "../../api";
+import { generateTimeList } from "../../utils/utils";
 import LiveSettings from "../GraphSettings/LiveSettings";
 import HistorySettings from "../GraphSettings/HistorySettings";
 import CurrentSettings from "../GraphSettings/CurrentSettings";
@@ -8,7 +9,7 @@ import "./MainContent.css";
 interface MainContentProps {
   names: string[];
   activeButton: string;
-  setActiveButton: (activeButton: "history" | "current" | "live") => void;
+  setActiveButton: (activeButton: "history" | "live") => void;
 }
 const formatSecondsToTime = (seconds: number): string => {
   const minutes = Math.floor(seconds / 60);
@@ -50,9 +51,33 @@ const MainContent: React.FC<MainContentProps> = ({
           (_, i) => i * distance
         )
       );
+      interface Data {
+        YAxis: number[][];
+        XAxis: number[];
+        names: string[];
+      }
 
+      function filterData(namesToKeep: string[], dataObject: Data): Data {
+        let filteredData: Data = {
+          YAxis: [],
+          XAxis: [...dataObject.XAxis], // Copy XAxis array
+          names: [],
+        };
+
+        // Filter YAxis and names based on names list
+        namesToKeep.forEach((name) => {
+          const index = dataObject.names.indexOf(name);
+          if (index !== -1) {
+            filteredData.YAxis.push(dataObject.YAxis[index]);
+            filteredData.names.push(dataObject.names[index]);
+          }
+        });
+
+        return filteredData;
+      }
       // Open SSE connection when live is selected
-      openSSE(distance, totalDistance, (data) => {
+      openSSE(distance, totalDistance, names, (data) => {
+        data = filterData(names, data);
         setDistanceGraphXAxis(data["XAxis"]);
         setDistanceGraphYAxis(data["YAxis"]);
         setHistoryGraphDates(data["names"]);
@@ -89,43 +114,6 @@ const MainContent: React.FC<MainContentProps> = ({
               setHistoryGraphXAxis(undefined);
               setHistoryGraphDates(undefined);
             }
-          } else if (activeButton === "current") {
-            let data = await getUserData(names, distance, dateToView);
-
-            let flattenedYAxis: number[][] = []; // Keep the original 2D array structure
-            let participantNames: string[] = []; // Array to store the name associated with each YAxis
-            let nameCounts: Record<string, number> = {}; // To keep track of name occurrences
-
-            Object.keys(data).forEach((name) => {
-              const participantData = data[name];
-
-              // Initialize count for this name if not already present
-              if (!nameCounts[name]) {
-                nameCounts[name] = 0;
-              }
-
-              // Add each YAxis to flattenedYAxis and keep track of the name with index
-              participantData.YAxis.forEach((yAxis: number[]) => {
-                flattenedYAxis.push(yAxis);
-
-                // Increment the count for this name before appending it
-                nameCounts[name] += 1;
-
-                // Append the name with its count (index) to differentiate between multiple entries of the same name
-                // participantNames.push(`${name}`);
-                participantNames.push(`${name} (${nameCounts[name]})`);
-              });
-            });
-
-            if (data) {
-              setDistanceGraphYAxis(flattenedYAxis); // Set the YAxis data
-              setDistanceGraphXAxis(data[names[0]].XAxis); // Set the XAxis data
-              setNamesPerLine(participantNames);
-              // You can also use participantNames to keep track of the names linked to YAxis data
-            } else {
-              setDistanceGraphYAxis(undefined);
-              setDistanceGraphXAxis(undefined);
-            }
           }
         } catch (error) {
           console.error("Error fetching data:", error);
@@ -145,32 +133,12 @@ const MainContent: React.FC<MainContentProps> = ({
           distance={distance}
           setDistance={setDistance}
         />
-      ) : activeButton === "current" ? (
-        <CurrentSettings
-          distance={distance}
-          setDistance={setDistance}
-          setDateToView={setDateToView}
-          dateToView={dateToView.toISOString().split("T")[0]}
-        />
       ) : activeButton === "history" ? (
         <HistorySettings distance={distance} setDistance={setDistance} />
       ) : (
         ""
       )}
-      {activeButton === "current" ? (
-        (distanceGraphXAxis ?? []).length > 0 &&
-        (distanceGraphYAxis?.[0]?.length ?? 0) > 0 ? (
-          <GenericGraph
-            name="Distance Over Time"
-            xAxisData={distanceGraphXAxis}
-            yAxisData={distanceGraphYAxis}
-            legendData={namesPerLine}
-            tickFormatter={formatSecondsToTime}
-          />
-        ) : (
-          "Data not found Try different date"
-        )
-      ) : activeButton === "history" ? (
+      {activeButton === "history" ? (
         (historyGraphXAxis ?? []).length > 0 &&
         (historyGraphYAxis?.[0]?.length ?? 0) > 0 ? (
           <GenericGraph
@@ -189,8 +157,8 @@ const MainContent: React.FC<MainContentProps> = ({
           name={`live view`}
           xAxisData={distanceGraphXAxis}
           yAxisData={distanceGraphYAxis}
-          legendData={historyGraphDates}
-          yAxisTicks={[0, 60, 120, 180, 240, 300, 360]}
+          legendData={names}
+          yAxisTicks={generateTimeList(100, totalDistance)}
           tickFormatter={formatSecondsToTime}
         />
       ) : (
@@ -199,15 +167,6 @@ const MainContent: React.FC<MainContentProps> = ({
 
       {/* Toggle Buttons at the bottom */}
       <div className="button-container">
-        <button
-          className={`toggle-button ${
-            activeButton === "current" ? "active" : ""
-          }`}
-          onClick={() => setActiveButton("current")}
-          disabled={activeButton === "current"} // Disable when active
-        >
-          Current Workout
-        </button>
         <button
           className={`toggle-button ${
             activeButton === "history" ? "active" : ""

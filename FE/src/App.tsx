@@ -21,9 +21,7 @@ function App() {
   const filteredActiveParticipants = activeParticipants.filter(
     (participant): participant is string => participant !== undefined
   );
-  const [activeButton, setActiveButton] = useState<
-    "history" | "current" | "live"
-  >("current");
+  const [activeButton, setActiveButton] = useState<"history" | "live">("live");
   useEffect(() => {
     if (activeButton === "history" && activeParticipants.length !== 1) {
       alert("Cant select more the one player when looking on history");
