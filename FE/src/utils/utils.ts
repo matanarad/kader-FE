@@ -21,3 +21,15 @@ export const generateTimeList = (
   }
   return result;
 };
+
+export const convertSecondsToTime = (seconds: number): string => {
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = seconds % 60;
+
+  // Format minutes and seconds to be two digits (e.g., "01:02" instead of "1:2")
+  const formattedMinutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
+  const formattedSeconds =
+    remainingSeconds < 10 ? `0${remainingSeconds}` : `${remainingSeconds}`;
+
+  return `${formattedMinutes}:${formattedSeconds}`;
+};

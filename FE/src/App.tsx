@@ -21,10 +21,11 @@ function App() {
   const filteredActiveParticipants = activeParticipants.filter(
     (participant): participant is string => participant !== undefined
   );
-  const [activeButton, setActiveButton] = useState<"history" | "live">("live");
+  const [activeButton, setActiveButton] = useState<"history" | "live">(
+    "history"
+  );
   useEffect(() => {
     if (activeButton === "history" && activeParticipants.length !== 1) {
-      alert("Cant select more the one player when looking on history");
       setActiveParticipants(
         activeParticipants[0] ? [activeParticipants[0]] : []
       );
@@ -40,7 +41,13 @@ function App() {
       />
       <div></div>
       <MainContent
-        names={activeParticipants ? activeParticipants : ["None"]}
+        names={
+          activeButton === "history"
+            ? activeParticipants
+              ? activeParticipants
+              : ["None"]
+            : participants
+        }
         activeButton={activeButton}
         setActiveButton={setActiveButton}
       />

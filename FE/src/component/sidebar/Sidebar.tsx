@@ -35,8 +35,12 @@ const Sidebar = ({
   };
 
   useEffect(() => {
-    // Fetch the active sensors when the component mounts
-    fetchActiveSensors();
+    const interval = setInterval(() => {
+      fetchActiveSensors();
+    }, 5000); // 5000 milliseconds = 5 seconds
+
+    // Clean up the interval on component unmount
+    return () => clearInterval(interval);
   }, []);
   return (
     <div className="sidebar">

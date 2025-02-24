@@ -7,6 +7,7 @@ import {
   CartesianGrid,
   Legend,
   ResponsiveContainer,
+  Tooltip,
 } from "recharts";
 import "./MainContent.css";
 
@@ -35,14 +36,11 @@ const GenericGraph: React.FC<GenericGraphProps> = ({
   const [chartData, setChartData] = useState<object[]>([]);
 
   useEffect(() => {
-    // console.log(xAxisData, yAxisData);
-
     if (xAxisData && yAxisData && yAxisData.length > 0) {
-      // Format data to match Recharts' expectations
       const formattedData = xAxisData.map((distance, index) => {
-        const entry: any = { distance }; // X-axis values
+        const entry: any = { distance };
         yAxisData.forEach((yData, i) => {
-          entry[`time_${i}`] = yData[index]; // Create unique keys for each line
+          entry[`time_${i}`] = yData[index];
         });
         return entry;
       });
@@ -55,16 +53,25 @@ const GenericGraph: React.FC<GenericGraphProps> = ({
   if (loading) {
     return <div>Loading...</div>;
   }
-  // Helper function to generate a color based on the name
+
+  // Function to format time in MM:SS format
+  const formatTime = (value: number) => {
+    const minutes = Math.floor(value / 60);
+    const seconds = value % 60;
+    return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(
+      2,
+      "0"
+    )}`;
+  };
+
   const getColorForName = (name: string) => {
     name = name.split(" ")[0];
-    // Simple hash function to map names to colors
     let hash = 0;
     for (let i = 0; i < name.length; i++) {
       hash = name.charCodeAt(i) + ((hash << 6) - hash);
     }
     const color = (hash & 0x00ffffff).toString(16).padStart(6, "0");
-    return `#${color}`; // Convert hash to a color
+    return `#${color}`;
   };
 
   return (
@@ -84,15 +91,16 @@ const GenericGraph: React.FC<GenericGraphProps> = ({
           <YAxis
             label={{ value: yAxisLabel, angle: -90, position: "insideLeft" }}
             tickFormatter={tickFormatter}
-            ticks={yAxisTicks} // Define fixed labels
+            ticks={yAxisTicks}
+          />
+          <Tooltip
+            formatter={(value) => `Time: ${formatTime(Number(value))}`}
+            contentStyle={{ textAlign: "left" }}
           />
           <Legend verticalAlign="bottom" height={36} />
 
           {yAxisData?.map((_, index) => {
-            // Get the name associated with this line
             const legendName = legendData?.[index] ?? `Line ${index + 1}`;
-
-            // Use the same color for lines with the same name
             const color = getColorForName(legendName);
 
             return (
@@ -100,7 +108,7 @@ const GenericGraph: React.FC<GenericGraphProps> = ({
                 key={index}
                 type="monotone"
                 dataKey={`time_${index}`}
-                stroke={color} // Use the calculated color
+                stroke={color}
                 fillOpacity={0.2}
                 strokeWidth={3}
                 name={legendName}

@@ -20,7 +20,12 @@ const ParticipantList: React.FC<ParticipantListProps> = ({
           <div
             className="participant"
             style={{
-              backgroundColor: activeParticipants.includes(p) ? "#444" : "",
+              backgroundColor:
+                activeButton === "live"
+                  ? "#444"
+                  : activeParticipants.includes(p)
+                  ? "#444"
+                  : "",
             }}
             key={index}
             onClick={() => {
@@ -31,9 +36,6 @@ const ParticipantList: React.FC<ParticipantListProps> = ({
                     : [...activeParticipants, p] // Add if not exists
                 );
               } else {
-                alert(
-                  "Cant select more the one player when looking on history"
-                );
                 setActiveParticipants([p]);
               }
             }}

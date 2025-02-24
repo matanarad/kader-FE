@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
-import { getUserData, getUserHistoryData, closeSSE, openSSE } from "../../api";
+import { getUserHistoryData, closeSSE, openSSE } from "../../api";
 import { generateTimeList } from "../../utils/utils";
 import LiveSettings from "../GraphSettings/LiveSettings";
 import HistorySettings from "../GraphSettings/HistorySettings";
-import CurrentSettings from "../GraphSettings/CurrentSettings";
 import GenericGraph from "./GenericGraph";
 import "./MainContent.css";
 interface MainContentProps {
@@ -38,11 +37,12 @@ const MainContent: React.FC<MainContentProps> = ({
   >(undefined);
   const [distance, setDistance] = useState<number>(200);
   const [totalDistance, setTotalDistance] = useState<number>(2000);
-  const [dateToView, setDateToView] = useState<Date>(new Date());
-  const [namesPerLine, setNamesPerLine] = useState<string[]>([]);
 
   const sseRef = useRef<EventSource | null>(null);
-
+  useEffect(() => {
+    console.log(distanceGraphYAxis);
+    console.log();
+  }, [distanceGraphYAxis]);
   useEffect(() => {
     if (activeButton === "live") {
       setDistanceGraphXAxis(
@@ -77,13 +77,16 @@ const MainContent: React.FC<MainContentProps> = ({
       }
       // Open SSE connection when live is selected
       openSSE(distance, totalDistance, names, (data) => {
+        // console.log("SSE Message Received:", data);
+
         data = filterData(names, data);
+        console.log("filterData:", data["YAxis"]);
         setDistanceGraphXAxis(data["XAxis"]);
         setDistanceGraphYAxis(data["YAxis"]);
         setHistoryGraphDates(data["names"]);
       }).then((sse) => {
         // Store SSE connection in ref
-        sseRef.current = sse;
+        sseRef.current = sse || null;
       });
 
       // Cleanup function: Close SSE when component unmounts or when the button is switched
@@ -122,7 +125,7 @@ const MainContent: React.FC<MainContentProps> = ({
 
       fetchData();
     }
-  }, [names, activeButton, distance, totalDistance, dateToView]);
+  }, [names, activeButton, distance, totalDistance]);
 
   return (
     <div className="main-content">
@@ -151,8 +154,11 @@ const MainContent: React.FC<MainContentProps> = ({
         ) : (
           "Data not found"
         )
-      ) : (distanceGraphXAxis ?? []).length > 0 &&
-        (distanceGraphYAxis?.[0]?.length ?? 0) > 0 ? (
+      ) : Array.isArray(distanceGraphXAxis) &&
+        distanceGraphXAxis.length > 0 &&
+        Array.isArray(distanceGraphYAxis) &&
+        distanceGraphYAxis.length > 0 &&
+        Array.isArray(distanceGraphYAxis[0]) ? (
         <GenericGraph
           name={`live view`}
           xAxisData={distanceGraphXAxis}
