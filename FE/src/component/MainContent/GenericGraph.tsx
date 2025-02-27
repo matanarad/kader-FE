@@ -92,18 +92,22 @@ const GenericGraph: React.FC<GenericGraphProps> = ({
             // Format minutes and seconds as two digits
             const formattedMinutes = minutes.toString().padStart(2, "0");
             const formattedSeconds = seconds.toString().padStart(2, "0");
-            if (graphType === "pace") {
-              return (
-                <p key={index} style={{ color: "black" }}>
-                  {name} - {formattedMinutes}:{formattedSeconds}m/km
-                </p>
-              );
+            if (formattedMinutes !== "NaN") {
+              if (graphType === "pace") {
+                return (
+                  <p key={index} style={{ color: "black" }}>
+                    {name} - {formattedMinutes}:{formattedSeconds}m/km
+                  </p>
+                );
+              } else {
+                return (
+                  <p key={index} style={{ color: "black" }}>
+                    {name}: {formatTime(Number(value))}
+                  </p>
+                );
+              }
             } else {
-              return (
-                <p key={index} style={{ color: "black" }}>
-                  {name}: {formatTime(Number(value))}
-                </p>
-              );
+              return "";
             }
           })}
         </div>
