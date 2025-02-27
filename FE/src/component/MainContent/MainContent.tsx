@@ -39,10 +39,7 @@ const MainContent: React.FC<MainContentProps> = ({
   const [totalDistance, setTotalDistance] = useState<number>(2000);
 
   const sseRef = useRef<EventSource | null>(null);
-  useEffect(() => {
-    console.log(distanceGraphYAxis);
-    console.log();
-  }, [distanceGraphYAxis]);
+
   useEffect(() => {
     if (activeButton === "live") {
       setDistanceGraphXAxis(
@@ -164,7 +161,7 @@ const MainContent: React.FC<MainContentProps> = ({
           xAxisData={distanceGraphXAxis}
           yAxisData={distanceGraphYAxis}
           legendData={names}
-          yAxisTicks={generateTimeList(100, totalDistance)}
+          yAxisTicks={generateTimeList(420, totalDistance)}
           tickFormatter={formatSecondsToTime}
         />
       ) : (
