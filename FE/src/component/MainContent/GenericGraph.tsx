@@ -10,6 +10,12 @@ import {
   Tooltip,
 } from "recharts";
 import "./MainContent.css";
+import {
+  convertToPace,
+  formatSecondsToTime,
+  getPaceTicks,
+  formatSecondsToPace,
+} from "../../utils/utils";
 
 interface GenericGraphProps {
   name: string;
@@ -18,7 +24,6 @@ interface GenericGraphProps {
   legendData?: string[];
   yAxisLabel?: string;
   xAxisLabel?: string;
-  tickFormatter?: (value: number) => string;
   yAxisTicks?: number[];
 }
 
@@ -29,11 +34,11 @@ const GenericGraph: React.FC<GenericGraphProps> = ({
   yAxisLabel,
   xAxisLabel,
   legendData,
-  tickFormatter,
   yAxisTicks,
 }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [chartData, setChartData] = useState<object[]>([]);
+  const [graphType, setGraphType] = useState<"pace" | "time">("pace"); // Toggle state
 
   useEffect(() => {
     if (xAxisData && yAxisData && yAxisData.length > 0) {
@@ -44,17 +49,20 @@ const GenericGraph: React.FC<GenericGraphProps> = ({
         });
         return entry;
       });
+      if (graphType == "pace") {
+        setChartData(convertToPace(formattedData));
+      } else {
+        setChartData(formattedData);
+      }
 
-      setChartData(formattedData);
       setLoading(false);
     }
-  }, [xAxisData, yAxisData]);
+  }, [xAxisData, yAxisData, graphType]);
 
   if (loading) {
     return <div>Loading...</div>;
   }
 
-  // Function to format time in MM:SS format
   const formatTime = (value: number) => {
     const minutes = Math.floor(value / 60);
     const seconds = value % 60;
@@ -62,6 +70,45 @@ const GenericGraph: React.FC<GenericGraphProps> = ({
       2,
       "0"
     )}`;
+  };
+
+  const CustomTooltip = ({ active, payload }: any) => {
+    if (active && payload && payload.length) {
+      return (
+        <div
+          style={{
+            backgroundColor: "#fff",
+            padding: "10px",
+            border: "1px solid #ccc",
+            borderRadius: "4px",
+            textAlign: "left",
+          }}
+        >
+          {payload.map((entry: any, index: number) => {
+            let { name, value } = entry;
+            const minutes = Math.floor(value); // Get the integer part (minutes)
+            const seconds = Math.round((value - minutes) * 60); // Get the fractional part and convert to seconds
+
+            // Format minutes and seconds as two digits
+            const formattedMinutes = minutes.toString().padStart(2, "0");
+            const formattedSeconds = seconds.toString().padStart(2, "0");
+            if (graphType === "pace") {
+              return (
+                <p key={index} style={{ color: "black" }}>
+                  {name} - {formattedMinutes}:{formattedSeconds}m/km
+                </p>
+              );
+            } else {
+              return (
+                <p key={index} style={{ color: "black" }}>
+                  {name}: {formatTime(Number(value))}
+                </p>
+              );
+            }
+          })}
+        </div>
+      );
+    }
   };
 
   const getColorForName = (name: string) => {
@@ -76,7 +123,23 @@ const GenericGraph: React.FC<GenericGraphProps> = ({
 
   return (
     <div className="distance-graph">
-      <h3>{name}</h3>
+      {/* Header container for title and toggle button */}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: "10px",
+        }}
+      >
+        <h3 style={{ margin: 0 }}>{name}</h3>
+        <button
+          onClick={() => setGraphType(graphType == "pace" ? "time" : "pace")}
+        >
+          {graphType == "pace" ? "Time graph" : "Pace graph"}
+        </button>
+      </div>
+
       <ResponsiveContainer width="100%" height={600}>
         <LineChart data={chartData}>
           <CartesianGrid strokeDasharray="3 3" />
@@ -90,13 +153,17 @@ const GenericGraph: React.FC<GenericGraphProps> = ({
           />
           <YAxis
             label={{ value: yAxisLabel, angle: -90, position: "insideLeft" }}
-            tickFormatter={tickFormatter}
-            ticks={yAxisTicks}
+            tickFormatter={
+              graphType == "pace" ? formatSecondsToPace : formatSecondsToTime
+            }
+            ticks={
+              graphType == "pace"
+                ? getPaceTicks(convertToPace(chartData))
+                : yAxisTicks
+            }
           />
-          <Tooltip
-            formatter={(value) => `Time: ${formatTime(Number(value))}`}
-            contentStyle={{ textAlign: "left" }}
-          />
+          <Tooltip content={<CustomTooltip />} />
+
           <Legend verticalAlign="bottom" height={36} />
 
           {yAxisData?.map((_, index) => {
@@ -107,7 +174,9 @@ const GenericGraph: React.FC<GenericGraphProps> = ({
               <Line
                 key={index}
                 type="monotone"
-                dataKey={`time_${index}`}
+                dataKey={
+                  graphType == "pace" ? `pace_${index}` : `time_${index}`
+                }
                 stroke={color}
                 fillOpacity={0.2}
                 strokeWidth={3}

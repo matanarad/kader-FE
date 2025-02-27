@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { getUserHistoryData, closeSSE, openSSE } from "../../api";
-import { generateTimeList } from "../../utils/utils";
+import { generateTimeList, formatSecondsToTime } from "../../utils/utils";
 import LiveSettings from "../GraphSettings/LiveSettings";
 import HistorySettings from "../GraphSettings/HistorySettings";
 import GenericGraph from "./GenericGraph";
@@ -10,11 +10,7 @@ interface MainContentProps {
   activeButton: string;
   setActiveButton: (activeButton: "history" | "live") => void;
 }
-const formatSecondsToTime = (seconds: number): string => {
-  const minutes = Math.floor(seconds / 60);
-  const remainingSeconds = seconds % 60;
-  return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
-};
+
 const MainContent: React.FC<MainContentProps> = ({
   names,
   activeButton,
@@ -74,10 +70,8 @@ const MainContent: React.FC<MainContentProps> = ({
       }
       // Open SSE connection when live is selected
       openSSE(distance, totalDistance, names, (data) => {
-        // console.log("SSE Message Received:", data);
-
         data = filterData(names, data);
-        console.log("filterData:", data["YAxis"]);
+
         setDistanceGraphXAxis(data["XAxis"]);
         setDistanceGraphYAxis(data["YAxis"]);
         setHistoryGraphDates(data["names"]);
@@ -146,7 +140,8 @@ const MainContent: React.FC<MainContentProps> = ({
             xAxisData={historyGraphXAxis}
             yAxisData={historyGraphYAxis}
             legendData={historyGraphDates}
-            tickFormatter={formatSecondsToTime}
+            // yAxisTicks={generateTimeList(420, totalDistance)}
+            // tickFormatter={formatSecondsToTime}
           />
         ) : (
           "Data not found"
@@ -162,7 +157,7 @@ const MainContent: React.FC<MainContentProps> = ({
           yAxisData={distanceGraphYAxis}
           legendData={names}
           yAxisTicks={generateTimeList(420, totalDistance)}
-          tickFormatter={formatSecondsToTime}
+          // tickFormatter={formatSecondsToTime}
         />
       ) : (
         "Data not found"

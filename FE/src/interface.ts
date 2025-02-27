@@ -9,4 +9,14 @@ interface SidebarProps {
   activeParticipants: string[] | [];
   activeButton: string;
 }
-export type { Pace, SidebarProps };
+
+interface DataPoint {
+  distance: number;
+  time_0: number;
+}
+
+interface PaceDataPoint {
+  distance: number;
+  pace: number;
+}
+export type { Pace, SidebarProps, DataPoint, PaceDataPoint };
