@@ -121,7 +121,13 @@ const GenericGraph: React.FC<GenericGraphProps> = ({
     for (let i = 0; i < name.length; i++) {
       hash = name.charCodeAt(i) + ((hash << 6) - hash);
     }
-    const color = (hash & 0x00ffffff).toString(16).padStart(6, "0");
+
+    // Increase the range of color values by applying a larger mask and adding some randomness
+    const randomFactor = Math.floor(Math.random() * 0x1000000); // Adds more randomness
+    const color = ((hash ^ randomFactor) & 0x00ffffff)
+      .toString(16)
+      .padStart(6, "0");
+
     return `#${color}`;
   };
 

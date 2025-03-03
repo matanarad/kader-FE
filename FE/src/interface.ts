@@ -9,14 +9,18 @@ interface SidebarProps {
   activeParticipants: string[] | [];
   activeButton: string;
 }
-
 interface DataPoint {
   distance: number;
-  time_0: number;
+  [key: string]: number | undefined; // Allows dynamic time properties
+}
+
+interface PacePoint {
+  distance: number;
+  [key: string]: number; // pace_0, pace_1, etc.
 }
 
 interface PaceDataPoint {
   distance: number;
   pace: number;
 }
-export type { Pace, SidebarProps, DataPoint, PaceDataPoint };
+export type { Pace, SidebarProps, DataPoint, PaceDataPoint, PacePoint };

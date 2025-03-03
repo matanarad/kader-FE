@@ -1,4 +1,4 @@
-import { PaceDataPoint, DataPoint } from "../interface";
+import { PacePoint } from "../interface";
 
 export function getParticipantByTagNumber(
   name: string,
@@ -38,39 +38,39 @@ export const convertSecondsToTime = (seconds: number): string => {
   return `${formattedMinutes}:${formattedSeconds}`;
 };
 
-export const convertToPace = (data: any[]): any[] => {
-  let paceData: any[] = [];
+export const convertToPace = (data: any[]): PacePoint[] => {
+  let paceData: PacePoint[] = [];
 
-  for (let i = 0; i < data.length; i++) {
-    let entry: any = { distance: data[i].distance };
+  for (let i = 0; i < data.length - 1; i++) {
+    const point1 = data[i];
+    const point2 = data[i + 1];
 
-    if (i === 0) {
-      // First entry has no previous point, set all pace_{index} values to 0
-      Object.keys(data[i]).forEach((key) => {
-        if (key.startsWith("time_")) {
-          const index = key.split("_")[1];
-          entry[`pace_${index}`] = 0;
+    let paceEntry: PacePoint = { distance: point2.distance };
+
+    // Get all unique time keys from both points
+    const timeKeys = [
+      ...new Set([
+        ...Object.keys(point1).filter((key) => key.startsWith("time_")),
+        ...Object.keys(point2).filter((key) => key.startsWith("time_")),
+      ]),
+    ];
+
+    for (const key of timeKeys) {
+      if (point1[key] !== undefined && point2[key] !== undefined) {
+        const time1 = point1[key] as number;
+        const time2 = point2[key] as number;
+        const timeDifference = Math.abs(time2 - time1);
+        const distanceDifference = Math.abs(point2.distance - point1.distance);
+
+        if (timeDifference > 0 && distanceDifference > 0) {
+          const paceMinPerKm =
+            ((timeDifference / distanceDifference) * 1000) / 60; // min/km
+          paceEntry[`pace_${key.split("_")[1]}`] = paceMinPerKm;
         }
-      });
-    } else {
-      Object.keys(data[i]).forEach((key) => {
-        if (key.startsWith("time_") && data[i - 1].hasOwnProperty(key)) {
-          const index = key.split("_")[1];
-          const distanceDiff = data[i].distance - data[i - 1].distance;
-          const timeDiff = data[i][key] - data[i - 1][key];
-
-          if (distanceDiff > 0) {
-            const paceInSecondsPerMeter = timeDiff / distanceDiff;
-            const paceInMinPerKm = (paceInSecondsPerMeter * 1000) / 60;
-            entry[`pace_${index}`] = paceInMinPerKm;
-          } else {
-            entry[`pace_${index}`] = 0; // Avoid division by zero
-          }
-        }
-      });
+      }
     }
 
-    paceData.push(entry);
+    paceData.push(paceEntry);
   }
 
   return paceData;
