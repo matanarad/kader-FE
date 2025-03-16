@@ -1,0 +1,38 @@
+.trainee-page {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+}
+.arrival-time-container {
+  margin: 0 auto;
+  text-align: center;
+  margin-bottom: 2vh;
+}
+.record-time-container {
+  margin: 0 auto;
+  text-align: center;
+  margin-bottom: 2vh;
+}
+.graph-container {
+  display: flex;
+  flex-direction: column;
+  /* align-items: center; Centers items horizontally */
+  text-align: center;
+  margin: 0 auto;
+  margin-bottom: 2vh;
+  width: 80vw;
+  height: 50vh;
+}
+.back-button {
+  margin: 0 auto;
+  margin-top: 5vh;
+  background: linear-gradient(145deg, #7ec2b6, #88a371);
+  color: #fff;
+  border: 2px solid #7ec2b6;
+  padding: 14px 30px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  font-weight: bold;
+  border-radius: 10px;
+}

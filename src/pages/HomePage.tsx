@@ -7,7 +7,7 @@ const HomePage: React.FC = () => {
   const people = useSelector((state: RootState) => state.people.people);
   return (
     <div className="home-page">
-      <div className="content-between-logo-and-list">
+      <div className="content-after-logo">
         <h2>ברוכים הבאים למערכת קד"ר</h2>
         <p>
           כאן ניתן לראות את רשימת המשתתפים שהגיעו לאימון היום ניתן ללחות על כל
