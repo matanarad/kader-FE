@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import "./App.css";
 import HomePage from "./pages/HomePage";
 import TraineePage from "./pages/TraineePage";
+import AddPage from "./pages/AddPage";
 import logo from "./img/Logo.png"; // Adjust the path according to your project structure
 import { useEffect, useState } from "react";
 import { fetchTraineeData } from "./api";
@@ -30,6 +31,7 @@ const App: React.FC = () => {
             path="/trainee/:id"
             element={<TraineePage trainees={trainees} />}
           />
+          <Route path="/add" element={<AddPage />} />
         </Routes>
       </div>
     </Router>

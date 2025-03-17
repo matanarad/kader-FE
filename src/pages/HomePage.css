@@ -34,3 +34,16 @@
   overflow-y: auto;
   flex-grow: 1;
 }
+.floating-plus-button {
+  position: fixed;
+  bottom: 2vh;
+  right: 2vh;
+  width: 5vh;
+  height: 5vh;
+  background: linear-gradient(145deg, #7ec2b6, #88a371);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}

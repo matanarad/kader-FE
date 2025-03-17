@@ -1,6 +1,5 @@
 import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
 import { Person } from "../interface"; // Adjust the path based on your file structure
 import GenericGraph from "../components/GenericGraph/GenericGraph";
 import "./TraineePage.css";
