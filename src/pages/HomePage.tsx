@@ -1,10 +1,13 @@
 import React from "react";
 import { PersonCard } from "../components/PersonCard/PersonCard"; // Assuming this is a component displaying individual person's details
-import { RootState } from "../store"; // Adjust the path based on your file structure
-import { useSelector } from "react-redux";
+
+import { Person } from "../interface"; // Adjust the path based on your file structure
 import "./HomePage.css";
-const HomePage: React.FC = () => {
-  const people = useSelector((state: RootState) => state.people.people);
+interface HomePageProps {
+  trainees: Person[];
+}
+
+const HomePage: React.FC<HomePageProps> = ({ trainees }) => {
   return (
     <div className="home-page">
       <div className="content-after-logo">
@@ -15,7 +18,7 @@ const HomePage: React.FC = () => {
         </p>
       </div>
       <div className="person-list-container">
-        {people.map((person) => (
+        {trainees.map((person) => (
           <PersonCard key={person.id} person={person} />
         ))}
       </div>

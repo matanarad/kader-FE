@@ -1,26 +1,18 @@
 import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { RootState } from "../store"; // Adjust the path based on your file structure
 import { useSelector } from "react-redux";
-
+import { Person } from "../interface"; // Adjust the path based on your file structure
 import GenericGraph from "../components/GenericGraph/GenericGraph";
 import "./TraineePage.css";
 
-type Person = {
-  id: number;
-  name: string;
-  arrivalTime: string;
-  best2000mRunResult: string;
-  runResults: number[];
-  runDates: string[];
-};
+interface TraineePageProps {
+  trainees: Person[];
+}
 
-const TraineePage: React.FC = () => {
+const TraineePage: React.FC<TraineePageProps> = ({ trainees }) => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const people = useSelector((state: RootState) => state.people.people);
-  const peopleData = people as Person[];
-  const person = peopleData.find((p) => p.id === Number(id));
+  const person = trainees.find((p) => p.id === Number(id));
 
   if (!person) {
     return <div>Trainee not found.</div>;
