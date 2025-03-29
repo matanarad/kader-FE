@@ -4,14 +4,21 @@ import { Trainee } from "../interface"; // Adjust the path based on your file st
 import "./HomePage.css";
 import plusIcon from "../img/plus.svg";
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { fetchTraineeData } from "../api"; // Adjust the path based on your file structure
 
-interface HomePageProps {
-  trainees: Trainee[];
-}
-
-const HomePage: React.FC<HomePageProps> = ({ trainees }) => {
+const HomePage: React.FC = () => {
   const navigate = useNavigate();
-
+  const [trainees, setTrainees] = useState<Trainee[]>([]);
+  useEffect(() => {
+    const getTraineeData = async () => {
+      const data = await fetchTraineeData();
+      if (data) {
+        setTrainees(data);
+      }
+    };
+    getTraineeData();
+  }, []);
   return (
     <div className="home-page">
       <div className="content-after-logo">

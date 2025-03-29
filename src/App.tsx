@@ -5,20 +5,10 @@ import HomePage from "./pages/HomePage";
 import TraineePage from "./pages/TraineePage";
 import AddPage from "./pages/AddPage";
 import logo from "./img/Logo.png"; // Adjust the path according to your project structure
-import { useEffect, useState } from "react";
-import { fetchTraineeData } from "./api";
-import { Person } from "./interface";
+
+import { ToastContainer } from "react-toastify";
+
 const App: React.FC = () => {
-  const [trainees, setTrainees] = useState<Person[]>([]);
-  useEffect(() => {
-    const getTraineeData = async () => {
-      const data = await fetchTraineeData();
-      if (data) {
-        setTrainees(data.people);
-      }
-    };
-    getTraineeData();
-  }, []);
   return (
     <Router>
       <div className="App">
@@ -26,13 +16,11 @@ const App: React.FC = () => {
           <img src={logo} alt="Workout Arrivals Logo" className="logo" />
         </div>
         <Routes>
-          <Route path="/" element={<HomePage trainees={trainees} />} />
-          <Route
-            path="/trainee/:id"
-            element={<TraineePage trainees={trainees} />}
-          />
+          <Route path="/" element={<HomePage />} />
+          <Route path="/trainee/:tag_id" element={<TraineePage />} />
           <Route path="/add" element={<AddPage />} />
         </Routes>
+        <ToastContainer rtl />
       </div>
     </Router>
   );

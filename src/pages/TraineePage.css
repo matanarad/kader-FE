@@ -9,7 +9,17 @@
   text-align: center;
   margin-bottom: 2vh;
 }
+.birthday-container {
+  margin: 0 auto;
+  text-align: center;
+  margin-bottom: 2vh;
+}
 .record-time-container {
+  margin: 0 auto;
+  text-align: center;
+  margin-bottom: 2vh;
+}
+.whatsapp-container {
   margin: 0 auto;
   text-align: center;
   margin-bottom: 2vh;
@@ -35,4 +45,32 @@
   font-size: 1.2rem;
   font-weight: bold;
   border-radius: 10px;
+}
+
+.add-run-container {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  row-gap: 2vh;
+  align-items: center;
+  margin: 0 auto;
+  justify-content: center;
+  align-content: center;
+}
+.add-button {
+  margin: 0 auto;
+  background: linear-gradient(145deg, #7ec2b6, #88a371);
+  color: #fff;
+  border: 2px solid #7ec2b6;
+  padding: 1rem;
+  font-size: 1.1rem;
+  font-weight: bold;
+  border-radius: 10px;
+}
+.run-input {
+  margin: 0 auto;
+  padding: 1rem;
+  height: 1vh;
+  border-radius: 10px;
+  border: 2px solid #7ec2b6;
+  text-align: center;
 }
