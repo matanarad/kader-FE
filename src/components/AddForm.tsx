@@ -2,19 +2,17 @@ import React from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import "./AddForm.css";
 import { useNavigate } from "react-router-dom";
+import { addTrainee } from "../api";
+import { toast } from "react-toastify";
 
 // Define the form data types
 interface FormValues {
   fullName: string;
-  best2000mRunResult: number;
-  results: {
-    date: string;
-    min: number;
-    sec: number;
-  }[];
+  phoneNumber: string;
+  birthday: string;
 }
 
-const AddForm: React.FC = () => {
+const AddForm: React.FC<{ tagId: string }> = ({ tagId }) => {
   const navigate = useNavigate();
   const {
     register,
@@ -23,7 +21,16 @@ const AddForm: React.FC = () => {
   } = useForm<FormValues>(); // Using generics for type safety
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
-    console.log("Form Data:", data);
+    addTrainee(data.fullName, data.phoneNumber, data.birthday, tagId).then(
+      (res) => {
+        if ("error" in res && res.error === 400) {
+          toast.error(res.detail as string); // Toast notification for error
+        } else {
+          toast.success("מתאמן נוסף בהצלחה!"); // Toast notification for success
+          navigate(`/`);
+        }
+      }
+    );
   };
 
   return (
@@ -41,24 +48,35 @@ const AddForm: React.FC = () => {
         </div>
 
         <div className="form-group">
-          <label htmlFor="lastName">תוצאת שיא ריצת 2000:</label>
+          <label htmlFor="phoneNumber">מספר טלפון:</label>
           <input
             className="form-input"
-            type="number"
-            id="best2000mRunResult"
-            {...register("best2000mRunResult", {
-              required: "חובה להזין תוצאת שיא לריצת 2000",
+            type="text"
+            id="phoneNumber"
+            {...register("phoneNumber", {
+              required: "חובה להזין מספר טלפון",
+              pattern: {
+                value: /^[0-9]{10}$/,
+                message: "מספר טלפון לא תקין",
+              },
             })}
           />
-          {errors.best2000mRunResult && (
-            <label>{errors.best2000mRunResult.message}</label>
-          )}
+          {errors.phoneNumber && <label>{errors.phoneNumber.message}</label>}
         </div>
+
+        <div className="form-group">
+          <label htmlFor="birthday">תאריך לידה:</label>
+          <input
+            className="form-input"
+            type="date"
+            id="birthday"
+            {...register("birthday", { required: "חובה להזין תאריך לידה" })}
+          />
+          {errors.birthday && <label>{errors.birthday.message}</label>}
+        </div>
+
         <button type="submit" className="back-button">
           עדכן משתמש
-        </button>
-        <button onClick={() => navigate("/")} className="back-button">
-          חזרה לדף הראשי
         </button>
       </div>
     </form>

@@ -3,11 +3,11 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import "./App.css";
 import HomePage from "./pages/HomePage";
 import TraineePage from "./pages/TraineePage";
-import AddPage from "./pages/AddPage";
+import ScanPage from "./pages/ScanPage";
 import logo from "./img/Logo.png"; // Adjust the path according to your project structure
 
 import { ToastContainer } from "react-toastify";
-
+import "react-toastify/dist/ReactToastify.css";
 const App: React.FC = () => {
   return (
     <Router>
@@ -18,7 +18,7 @@ const App: React.FC = () => {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/trainee/:tag_id" element={<TraineePage />} />
-          <Route path="/add" element={<AddPage />} />
+          <Route path="/scan" element={<ScanPage />} />
         </Routes>
         <ToastContainer rtl />
       </div>

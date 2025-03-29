@@ -4,7 +4,7 @@ import GenericGraph from "../components/GenericGraph/GenericGraph";
 import "./TraineePage.css";
 import { fetchTraineeByTagID, addRunToTrainee, getArrivalTime } from "../api"; // Adjust the path based on your file structure
 import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+
 import { Trainee } from "../interface"; // Adjust the path based on your file structure
 import whatsappIcon from "../img/WhatsApp.svg";
 const TraineePage: React.FC = () => {
