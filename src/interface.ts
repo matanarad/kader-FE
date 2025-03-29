@@ -1,6 +1,6 @@
 export interface Run {
-  runDate: string; // Using ISO string format for dates
-  runTime: number; // Assuming run time is stored as a number (e.g., in seconds)
+  date: string; // Using ISO string format for dates
+  time: number; // Assuming run time is stored as a number (e.g., in seconds)
 }
 export interface Trainee {
   name: string;

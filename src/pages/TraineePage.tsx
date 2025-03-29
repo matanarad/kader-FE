@@ -2,8 +2,8 @@ import React, { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import GenericGraph from "../components/GenericGraph/GenericGraph";
 import "./TraineePage.css";
-import { fetchTraineeByTagID, addRunToTrainee } from "../api"; // Adjust the path based on your file structure
-import { ToastContainer, toast } from "react-toastify";
+import { fetchTraineeByTagID, addRunToTrainee, getArrivalTime } from "../api"; // Adjust the path based on your file structure
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Trainee } from "../interface"; // Adjust the path based on your file structure
 import whatsappIcon from "../img/WhatsApp.svg";
@@ -11,16 +11,28 @@ const TraineePage: React.FC = () => {
   const { tag_id } = useParams<{ tag_id: string }>();
   const navigate = useNavigate();
   const [trainee, setTrainee] = React.useState<Trainee | null>(null); // Adjust the type based on your data structure
+  const [arrivalTime, setArrivalTime] = React.useState<string | null>(null);
   useEffect(() => {
     fetchTraineeByTagID(tag_id!).then((data) => {
       if (data) {
-        console.log("Fetched data:", data);
         setTrainee(data);
       } else {
         console.error("No data found for the given tag_id");
       }
     });
   }, []);
+  useEffect(() => {
+    getArrivalTime(tag_id!).then((data) => {
+      setArrivalTime(
+        data
+          ? new Date(data).toLocaleTimeString("he-IL", {
+              hour: "2-digit",
+              minute: "2-digit",
+            })
+          : null
+      );
+    });
+  }, [trainee]);
   if (trainee === null) {
     return <div>Trainee not found.</div>;
   }
@@ -42,7 +54,7 @@ const TraineePage: React.FC = () => {
             <strong>זמן הגעה לאימון</strong>
           </div>
           <div dir="ltr">
-            <div>To Do</div>
+            <div>{arrivalTime}</div>
           </div>
         </div>
         <div className="birthday-container">
@@ -97,7 +109,6 @@ const TraineePage: React.FC = () => {
             if (runTime) {
               addRunToTrainee(tag_id!, Number(runTime)).then((data) => {
                 if (data) {
-                  console.log("New run data:", data);
                   toast.success("ריצה נוספה בהצלחה!"); // Toast notification for success
                 } else {
                   toast.error("שגיאה בהוספת הריצה. נסה שוב."); // Toast notification for error

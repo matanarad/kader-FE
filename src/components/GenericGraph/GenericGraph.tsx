@@ -10,7 +10,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-
+import { Run } from "../../interface"; // Adjust the path based on your file structure
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -22,16 +22,15 @@ ChartJS.register(
 );
 
 interface LineGraphProps {
-  run_result: number[];
-  run_dates: string[];
+  runs: Run[];
 }
 
-const GenericGraph: React.FC<LineGraphProps> = ({ run_result, run_dates }) => {
+const GenericGraph: React.FC<LineGraphProps> = ({ runs }) => {
   const data = {
-    labels: run_dates,
+    labels: runs.map((run) => run.date),
     datasets: [
       {
-        data: run_result,
+        data: runs.map((run) => run.time),
         borderColor: "#88a371",
       },
     ],
