@@ -5,11 +5,7 @@
 }
 
 .logo-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 10;
+  position: relative;
   text-align: center;
   padding: 1vh 0;
 }
@@ -20,7 +16,6 @@
 
 .content-after-logo {
   margin: 0 auto;
-  margin-top: 10vh;
   text-align: center;
   width: 90%;
 }
