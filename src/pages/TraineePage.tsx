@@ -94,19 +94,25 @@ const TraineePage: React.FC = () => {
         ) : null}
       </div>
       <div className="graph-container">
-        <div>
-          <strong>גרף ריצות 2000</strong>
-        </div>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            marginTop: "2rem",
-          }}
-        >
-          <GenericGraph runs={trainee.runs} />
-        </div>
+        {trainee.runs.length > 0 ? (
+          <>
+            <div>
+              <strong>גרף ריצות 2000</strong>
+            </div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                marginTop: "2rem",
+              }}
+            >
+              <GenericGraph runs={trainee.runs} />
+            </div>
+          </>
+        ) : (
+          ""
+        )}
       </div>
       <div className="add-run-container">
         <form
@@ -118,6 +124,13 @@ const TraineePage: React.FC = () => {
               addRunToTrainee(tag_id!, Number(runTime)).then((data) => {
                 if (data) {
                   toast.success("ריצה נוספה בהצלחה!"); // Toast notification for success
+                  fetchTraineeByTagID(tag_id!).then((updatedTrainee) => {
+                    if (updatedTrainee) {
+                      setTrainee(updatedTrainee);
+                    } else {
+                      toast.error("שגיאה בעדכון פרטי המתאמן.");
+                    }
+                  });
                 } else {
                   toast.error("שגיאה בהוספת הריצה. נסה שוב."); // Toast notification for error
                 }
