@@ -1,0 +1,36 @@
+form {
+  font-family: Arial, sans-serif;
+  display: contents;
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.form-group {
+  margin-bottom: 1rem;
+  width: 90%;
+}
+.form-input {
+  width: 100%;
+  box-sizing: border-box;
+  border: 0;
+  margin: 0;
+  padding: 8px;
+  border-radius: 5px;
+}
+.result-form-group {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  align-items: center;
+}
+/* input {
+  width: 90vw;
+  margin: 0;
+  padding: 8px;
+  border: 0;
+  font-size: 16px;
+}
+   */

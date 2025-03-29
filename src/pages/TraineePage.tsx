@@ -12,6 +12,8 @@ const TraineePage: React.FC<TraineePageProps> = ({ trainees }) => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const person = trainees.find((p) => p.id === Number(id));
+  console.log("person", person);
+  console.log("trainees", trainees);
 
   if (!person) {
     return <div>Trainee not found.</div>;

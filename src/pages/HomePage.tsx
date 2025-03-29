@@ -1,12 +1,12 @@
 import React from "react";
-import { PersonCard } from "../components/PersonCard/PersonCard"; // Assuming this is a component displaying individual person's details
-import { Person } from "../interface"; // Adjust the path based on your file structure
+import { TraineeCard } from "../components/TraineeCard/TraineeCard"; // Adjust the path based on your file structure
+import { Trainee } from "../interface"; // Adjust the path based on your file structure
 import "./HomePage.css";
 import plusIcon from "../img/plus.svg";
 import { useNavigate } from "react-router-dom";
 
 interface HomePageProps {
-  trainees: Person[];
+  trainees: Trainee[];
 }
 
 const HomePage: React.FC<HomePageProps> = ({ trainees }) => {
@@ -22,11 +22,11 @@ const HomePage: React.FC<HomePageProps> = ({ trainees }) => {
         </p>
       </div>
       <div className="person-list-container">
-        {trainees.map((person) => (
-          <PersonCard key={person.id} person={person} />
+        {trainees.map((trainee) => (
+          <TraineeCard key={trainee.tag_id} trainee={trainee} />
         ))}
       </div>
-      <div className="floating-plus-button" onClick={() => navigate("/add")}>
+      <div className="floating-plus-button" onClick={() => navigate("/scan")}>
         <img src={plusIcon} style={{ width: "50%" }} />
       </div>
     </div>
