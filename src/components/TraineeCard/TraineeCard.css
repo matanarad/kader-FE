@@ -4,6 +4,11 @@
   padding: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
   width: 70vw;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column; /* Optional, if you want vertical stacking */
 }
 
 .name-button {

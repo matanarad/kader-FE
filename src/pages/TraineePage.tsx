@@ -23,6 +23,8 @@ const TraineePage: React.FC = () => {
   }, []);
   useEffect(() => {
     getArrivalTime(tag_id!).then((data) => {
+      console.log(arrivalTime);
+
       setArrivalTime(
         data
           ? new Date(data).toLocaleTimeString("he-IL", {
@@ -54,7 +56,7 @@ const TraineePage: React.FC = () => {
             <strong>זמן הגעה לאימון</strong>
           </div>
           <div dir="ltr">
-            <div>{arrivalTime}</div>
+            <div>{arrivalTime !== null ? arrivalTime : "לא זוהה זמן הגעה"}</div>
           </div>
         </div>
         <div className="birthday-container">
@@ -77,7 +79,13 @@ const TraineePage: React.FC = () => {
             style={{ width: "15vw", cursor: "pointer" }}
             onClick={() => {
               if (trainee?.phone_number) {
-                window.open(`https://wa.me/${trainee.phone_number}`, "_blank");
+                // window.open(`https://wa.me/${trainee.phone_number}`, "_blank");
+                const countryCode = "+972"; // Change to your country's code
+                const formattedNumber = trainee.phone_number.replace(/^0/, ""); // Remove leading zero
+                window.open(
+                  `https://wa.me/${countryCode}${formattedNumber}`,
+                  "_blank"
+                );
               } else {
                 alert("מספר טלפון לא נמצא");
               }

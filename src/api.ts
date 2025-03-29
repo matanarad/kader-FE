@@ -1,5 +1,5 @@
 import axios from "axios";
-const URL = "http://localhost:8000/api/v1";
+const URL = "http://192.168.1.71:8000/api/v1";
 import { Trainee } from "./interface";
 
 export const fetchTraineeData = async (): Promise<Trainee[] | null> => {
