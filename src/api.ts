@@ -75,7 +75,7 @@ export const scanTag = async (): Promise<{
     return response.data as { message: string; trainee_info: string };
   } catch (error) {
     console.error("Error fetching data:", error);
-    return null;
+    throw new Error("מצטערים, לא הצלחנו למצוא את הצמיד");
   }
 };
 

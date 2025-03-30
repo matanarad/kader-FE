@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import AddForm from "../components/AddForm";
 import { scanTag, fetchTraineeByTagID } from "../api";
+import { toast } from "react-toastify";
+
 // import { Trainee } from "../interface";
 const ScanPage: React.FC = () => {
   const navigate = useNavigate();
@@ -27,22 +29,25 @@ const ScanPage: React.FC = () => {
         <button
           onClick={() => {
             setState("scanning");
-            scanTag().then((data) => {
-              setTagId(data?.trainee_info || false);
-              if (data?.trainee_info) {
-                fetchTraineeByTagID(data?.trainee_info).then((trainee) => {
-                  // if (trainee) {
-                  //   setTrainee(trainee);
-                  // }
-                  if (trainee?.name === "None") {
-                    setState("add");
-                  } else {
-                    setState("update");
-                  }
-                });
-              }
-              setState("detected");
-            });
+            scanTag()
+              .then((data) => {
+                setTagId(data?.trainee_info || false);
+                if (data?.trainee_info) {
+                  fetchTraineeByTagID(data?.trainee_info).then((trainee) => {
+                    if (trainee?.name === "None") {
+                      setState("add");
+                    } else {
+                      setState("update");
+                    }
+                  });
+                }
+                setState("detected");
+              })
+              .catch((error) => {
+                // If there's an error, alert the user
+                toast.error(error.message || "An unexpected error occurred.");
+                navigate("/");
+              });
           }}
           className="back-button"
         >
