@@ -1,5 +1,6 @@
 {
   "name": "kader-fe",
+  "homepage": "https://matanarad.github.io/kader-fe",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -7,13 +8,16 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.6.1",
     "@types/chart.js": "^2.9.41",
     "axios": "^1.8.3",
     "chart.js": "^4.4.8",
+    "gh-pages": "^6.3.0",
     "lucide-react": "^0.482.0",
     "react": "^18.3.1",
     "react-chartjs-2": "^5.3.0",
