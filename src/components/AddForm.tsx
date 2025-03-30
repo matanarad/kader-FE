@@ -37,7 +37,9 @@ const AddForm: React.FC<{ tagId: string }> = ({ tagId }) => {
     <form onSubmit={handleSubmit(onSubmit)} dir="rtl">
       <div className="form-container">
         <div className="form-group">
-          <label htmlFor="fullName">שם מלא:</label>
+          <label htmlFor="fullName" className="form-label">
+            שם מלא:
+          </label>
           <input
             className="form-input"
             type="text"
@@ -48,7 +50,9 @@ const AddForm: React.FC<{ tagId: string }> = ({ tagId }) => {
         </div>
 
         <div className="form-group">
-          <label htmlFor="phoneNumber">מספר טלפון:</label>
+          <label htmlFor="phoneNumber" className="form-label">
+            מספר טלפון:
+          </label>
           <input
             className="form-input"
             type="text"
@@ -65,9 +69,11 @@ const AddForm: React.FC<{ tagId: string }> = ({ tagId }) => {
         </div>
 
         <div className="form-group">
-          <label htmlFor="birthday">תאריך לידה:</label>
+          <label htmlFor="birthday" className="form-label">
+            תאריך לידה:
+          </label>
           <input
-            className="form-input"
+            className="form-input date"
             type="date"
             id="birthday"
             {...register("birthday", { required: "חובה להזין תאריך לידה" })}

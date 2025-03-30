@@ -79,7 +79,6 @@ const TraineePage: React.FC = () => {
             style={{ width: "15vw", cursor: "pointer" }}
             onClick={() => {
               if (trainee?.phone_number) {
-                // window.open(`https://wa.me/${trainee.phone_number}`, "_blank");
                 const countryCode = "+972"; // Change to your country's code
                 const formattedNumber = trainee.phone_number.replace(/^0/, ""); // Remove leading zero
                 window.open(

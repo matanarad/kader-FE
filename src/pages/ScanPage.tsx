@@ -4,12 +4,14 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import AddForm from "../components/AddForm";
 import { scanTag, fetchTraineeByTagID } from "../api";
-import { Trainee } from "../interface";
+// import { Trainee } from "../interface";
 const ScanPage: React.FC = () => {
   const navigate = useNavigate();
-  const [tagId, setTagId] = useState<string | false>(false);
-  const [trainee, setTrainee] = useState<Trainee | false>(false);
-  const [state, setState] = useState<string | false>(false);
+  const [tagId, setTagId] = useState<string | false>(
+    "U3400300833B2DDD9014000000006A4D8"
+  );
+  // const [trainee, setTrainee] = useState<Trainee | false>(false);
+  const [state, setState] = useState<string | false>("add");
   useEffect(() => {
     if (state === "update") navigate(`/trainee/${tagId}`);
   }, [state]);
@@ -31,9 +33,9 @@ const ScanPage: React.FC = () => {
               setTagId(data?.trainee_info || false);
               if (data?.trainee_info) {
                 fetchTraineeByTagID(data?.trainee_info).then((trainee) => {
-                  if (trainee) {
-                    setTrainee(trainee);
-                  }
+                  // if (trainee) {
+                  //   setTrainee(trainee);
+                  // }
                   if (trainee?.name === "None") {
                     setState("add");
                   } else {

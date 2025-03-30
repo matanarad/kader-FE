@@ -1,0 +1,1 @@
+{"root":["./src/app.tsx","./src/api.ts","./src/interface.ts","./src/main.tsx","./src/vite-env.d.ts","./src/components/addform.tsx","./src/components/genericgraph/genericgraph.tsx","./src/components/traineecard/traineecard.tsx","./src/pages/homepage.tsx","./src/pages/scanpage.tsx","./src/pages/traineepage.tsx"],"version":"5.8.2"}

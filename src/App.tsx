@@ -10,7 +10,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 const App: React.FC = () => {
   return (
-    <Router>
+    <Router basename="/kader-FE">
       <div className="App">
         <div className="logo-container">
           <img src={logo} alt="Workout Arrivals Logo" className="logo" />
