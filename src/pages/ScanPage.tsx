@@ -7,11 +7,9 @@ import { scanTag, fetchTraineeByTagID } from "../api";
 // import { Trainee } from "../interface";
 const ScanPage: React.FC = () => {
   const navigate = useNavigate();
-  const [tagId, setTagId] = useState<string | false>(
-    "U3400300833B2DDD9014000000006A4D8"
-  );
+  const [tagId, setTagId] = useState<string | false>(false);
   // const [trainee, setTrainee] = useState<Trainee | false>(false);
-  const [state, setState] = useState<string | false>("add");
+  const [state, setState] = useState<string | false>(false);
   useEffect(() => {
     if (state === "update") navigate(`/trainee/${tagId}`);
   }, [state]);
@@ -51,7 +49,14 @@ const ScanPage: React.FC = () => {
           הצמדתי את הצמיד
         </button>
       ) : state === "scanning" ? (
-        <>Scanning</>
+        <div className="scanning-message">
+          <p dir="rtl">סורק את הצמיד</p>
+          <div className="dots-loader">
+            <span className="dot"></span>
+            <span className="dot"></span>
+            <span className="dot"></span>
+          </div>
+        </div>
       ) : state === "add" ? (
         <AddForm tagId={tagId ? tagId : "000"} />
       ) : (

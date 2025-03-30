@@ -3,3 +3,44 @@
   flex-direction: column;
   height: 100vh;
 }
+
+.scanning-message {
+  text-align: center;
+}
+
+.dots-loader {
+  display: inline-block;
+  margin-top: 10px;
+}
+
+.dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin: 0 5px;
+  background-color: #ffffff; /* You can change the color */
+  border-radius: 50%;
+  animation: dot-blink 1.5s infinite ease-in-out;
+}
+
+.dot:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.dot:nth-child(2) {
+  animation-delay: 0.3s;
+}
+
+.dot:nth-child(3) {
+  animation-delay: 0.6s;
+}
+
+@keyframes dot-blink {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+}
