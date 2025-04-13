@@ -4,10 +4,14 @@
     <meta charset="UTF-8" />
     <title>Redirecting...</title>
     <script type="text/javascript">
-      // Redirect all 404s to the index.html while preserving the path
-      const redirectTo =
-        "/kader-FE" + location.pathname + location.search + location.hash;
-      window.location.replace(redirectTo);
+      const currentPath = location.pathname;
+
+      // Prevent redirect loop if we're already inside the base path
+      if (!currentPath.startsWith("/kader-FE/")) {
+        const redirectTo =
+          "/kader-FE" + currentPath + location.search + location.hash;
+        window.location.replace(redirectTo);
+      }
     </script>
   </head>
   <body></body>
