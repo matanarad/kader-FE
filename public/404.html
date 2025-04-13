@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Redirecting...</title>
+    <script>
+      const path = location.pathname + location.search + location.hash;
+      const isAlreadyRedirected = sessionStorage.getItem("redirectPath");
+
+      if (!isAlreadyRedirected && path !== "/kader-FE/404.html") {
+        sessionStorage.setItem("redirectPath", path);
+        location.replace("/kader-FE/index.html");
+      }
+    </script>
+  </head>
+  <body>
+    <p>Redirecting...</p>
+  </body>
+</html>

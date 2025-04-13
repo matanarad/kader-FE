@@ -1,6 +1,6 @@
 import React from "react";
 import "./ScanPage.css";
-import { useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import AddForm from "../components/AddForm";
 import { scanTag, fetchTraineeByTagID } from "../api";
@@ -8,6 +8,8 @@ import { toast } from "react-toastify";
 
 // import { Trainee } from "../interface";
 const ScanPage: React.FC = () => {
+  const { date } = useParams<{ date: string }>();
+
   const navigate = useNavigate();
   const [tagId, setTagId] = useState<string | false>(false);
   // const [trainee, setTrainee] = useState<Trainee | false>(false);
@@ -68,7 +70,17 @@ const ScanPage: React.FC = () => {
         <></>
       )}
 
-      <button onClick={() => navigate("/")} className="back-button">
+      <button
+        onClick={() => {
+          const trimmedChar = date!.slice(10); // "F"
+          if (trimmedChar === "F") {
+            navigate(`/${date}`);
+          } else {
+            navigate("/");
+          }
+        }}
+        className="back-button"
+      >
         חזרה לדף הראשי
       </button>
     </div>

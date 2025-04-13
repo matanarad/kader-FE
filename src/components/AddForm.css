@@ -24,6 +24,7 @@ form {
   padding: 8px;
   border-radius: 5px;
   background-color: aliceblue;
+  color: black;
 }
 .form-label {
   width: 100%;

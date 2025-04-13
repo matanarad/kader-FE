@@ -5,12 +5,13 @@ import { Trainee } from "../../interface"; // Adjust the path based on your file
 
 interface TraineeCardProps {
   trainee: Trainee;
+  date?: string; // Optional date prop for the trainee
 }
 
-export const TraineeCard: React.FC<TraineeCardProps> = ({ trainee }) => {
+export const TraineeCard: React.FC<TraineeCardProps> = ({ trainee, date }) => {
   return (
     <div key={trainee.tag_id} className="person-card">
-      <Link to={`/trainee/${trainee.tag_id}`} className="name-button">
+      <Link to={`/trainee/${trainee.tag_id}/${date}`} className="name-button">
         {trainee.name}
       </Link>
     </div>

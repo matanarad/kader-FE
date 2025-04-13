@@ -8,9 +8,9 @@ import { toast } from "react-toastify";
 import { Trainee } from "../interface"; // Adjust the path based on your file structure
 import whatsappIcon from "../img/WhatsApp.svg";
 const TraineePage: React.FC = () => {
-  const { tag_id } = useParams<{ tag_id: string }>();
+  const { tag_id, date } = useParams<{ tag_id: string; date: string }>();
   const navigate = useNavigate();
-  const [trainee, setTrainee] = React.useState<Trainee | null>(null); // Adjust the type based on your data structure
+  const [trainee, setTrainee] = React.useState<Trainee | null | false>(null); // Adjust the type based on your data structure
   const [arrivalTime, setArrivalTime] = React.useState<string | null>(null);
   useEffect(() => {
     fetchTraineeByTagID(tag_id!).then((data) => {
@@ -18,31 +18,53 @@ const TraineePage: React.FC = () => {
         setTrainee(data);
       } else {
         console.error("No data found for the given tag_id");
+        setTrainee(false);
       }
     });
   }, []);
-  useEffect(() => {
-    getArrivalTime(tag_id!).then((data) => {
-      console.log(arrivalTime);
+  function convertToIsraelTime(inputDateString: string): string {
+    // Ensure the date string is treated as UTC by appending "Z"
+    const date = new Date(inputDateString + "Z");
 
-      setArrivalTime(
-        data
-          ? new Date(data).toLocaleTimeString("he-IL", {
-              hour: "2-digit",
-              minute: "2-digit",
-            })
-          : null
-      );
-    });
+    // Convert to Israel time, considering daylight saving
+    const israelTime = new Intl.DateTimeFormat("en-IL", {
+      timeZone: "Asia/Jerusalem",
+      hour12: false,
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+    }).format(date);
+
+    return israelTime;
+  }
+  useEffect(() => {
+    const trimmedDate = date!.slice(0, 10); // "2025-03-30"
+    const trimmedChar = date!.slice(10); // "F"
+    getArrivalTime(tag_id!, trimmedChar === "F" ? trimmedDate : date!).then(
+      (data) => {
+        setArrivalTime(convertToIsraelTime(data!));
+      }
+    );
   }, [trainee]);
   if (trainee === null) {
-    return <div>Trainee not found.</div>;
+    return <div>מחפש את המתאמן</div>;
+  } else if (trainee === false) {
+    return <div>לא נמצא מתאמן עם הצמיד הזה</div>;
   }
 
   return (
     <div className="trainee-page" dir="rtl">
       <div className="content-after-logo">
-        <h2>{trainee.name}</h2>
+        <h2 style={{ marginBottom: 0 }}>{trainee.name}</h2>
+        <h4 style={{ marginTop: 0 }}>
+          {date!.slice(10) === "F"
+            ? date!.slice(0, 10)
+              ? date!.slice(0, 10).split("-").reverse().join("/")
+              : "תאריך לא זמין"
+            : date
+            ? date.split("-").reverse().join("/")
+            : "תאריך לא זמין"}
+        </h4>
       </div>
       <div
         style={{
@@ -150,7 +172,17 @@ const TraineePage: React.FC = () => {
           </button>
         </form>
       </div>
-      <button onClick={() => navigate("/")} className="back-button">
+      <button
+        onClick={() => {
+          const trimmedChar = date!.slice(10); // "F"
+          if (trimmedChar === "F") {
+            navigate(`/${date}`);
+          } else {
+            navigate("/");
+          }
+        }}
+        className="back-button"
+      >
         חזרה לדף הראשי
       </button>
     </div>

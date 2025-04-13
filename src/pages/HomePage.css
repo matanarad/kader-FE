@@ -42,3 +42,132 @@
   justify-content: center;
   z-index: 100;
 }
+
+.floating-filter-button {
+  width: 5vh;
+  height: 5vh;
+  background: linear-gradient(145deg, #7ec2b6, #88a371);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.floating-filter-container {
+  display: grid;
+  grid-template-columns: auto max-content;
+  gap: 3vw;
+  align-items: center;
+  position: fixed;
+  bottom: 2vh;
+  left: 2vh;
+  width: 11vh;
+  height: 5vh;
+  font-weight: bold;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(3px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal {
+  /* background-color: #fff; */
+  background-color: #242424;
+  border-radius: 16px;
+  padding: 30px 24px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+  width: 60%;
+  text-align: center;
+}
+.modal-title {
+  margin-bottom: 20px;
+  font-size: 1.25rem;
+  color: #fff;
+}
+
+.modal-date-input {
+  padding: 2vh;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  border-radius: 8px;
+  margin: 0 auto;
+  margin-bottom: 2vh;
+}
+
+.placeholder-text {
+  /* position: absolute;
+  top: 50%;
+  left: 8px; */
+  transform: translateY(-50%);
+  color: #aaa;
+  pointer-events: none; /* So it doesn't interfere with the input field */
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+/* .modal-date-input:focus + .placeholder-text,
+.modal-date-input:not(:placeholder-shown) + .placeholder-text {
+  display: none;
+} */
+
+.modal-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.modal-btn {
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: background-color 0.2s ease;
+}
+
+.modal-btn.confirm {
+  background-color: #007bff;
+  color: white;
+}
+
+.modal-btn.confirm:hover {
+  background-color: #0056b3;
+}
+
+.filter-button {
+  width: 5vh;
+  height: 5vh;
+  background: linear-gradient(145deg, #7ec2b6, #88a371);
+  border: none;
+  color: white;
+  width: 50%;
+  height: 3vh;
+  font-weight: 1.2rem;
+  font-weight: bold;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  margin-top: 1.5vh;
+}
+
+.filter-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: baseline;
+  justify-content: center;
+  justify-items: center;
+}

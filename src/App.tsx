@@ -16,9 +16,9 @@ const App: React.FC = () => {
           <img src={logo} alt="Workout Arrivals Logo" className="logo" />
         </div>
         <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/trainee/:tag_id" element={<TraineePage />} />
-          <Route path="/scan" element={<ScanPage />} />
+          <Route path="/:date?" element={<HomePage />} />
+          <Route path="/trainee/:tag_id/:date" element={<TraineePage />} />
+          <Route path="/scan/:date" element={<ScanPage />} />
         </Routes>
         <ToastContainer rtl />
       </div>

@@ -47,14 +47,13 @@ export const addRunToTrainee = async (
 };
 
 export const getArrivalTime = async (
-  tag_id: string
+  tag_id: string,
+  date: string
 ): Promise<string | null> => {
   try {
     // Adjusted API endpoint to match the FastAPI route
     const response = await axios.get(
-      `${URL}/trainees/${tag_id}/first-log/?date=${
-        new Date().toISOString().split("T")[0]
-      }`
+      `${URL}/trainees/${tag_id}/first-log/?date=${date}`
     );
 
     return response.data as string;

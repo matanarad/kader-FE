@@ -1,7 +1,7 @@
 import React from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import "./AddForm.css";
-import { useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { addTrainee } from "../api";
 import { toast } from "react-toastify";
 
@@ -13,6 +13,8 @@ interface FormValues {
 }
 
 const AddForm: React.FC<{ tagId: string }> = ({ tagId }) => {
+  const { date } = useParams<{ date: string }>();
+
   const navigate = useNavigate();
   const {
     register,
@@ -28,6 +30,12 @@ const AddForm: React.FC<{ tagId: string }> = ({ tagId }) => {
         } else {
           toast.success("מתאמן נוסף בהצלחה!"); // Toast notification for success
           navigate(`/`);
+          const trimmedChar = date!.slice(10); // "F"
+          if (trimmedChar === "F") {
+            navigate(`/${date}`);
+          } else {
+            navigate("/");
+          }
         }
       }
     );
