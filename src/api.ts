@@ -1,11 +1,13 @@
 import axios from "axios";
-// const URL = "http://192.168.1.71:8000/api/v1";
+// const URL = "http://127.0.0.1:8000/api/v1";
 const URL = "https://kader-api-service-thwmc5pt7a-ue.a.run.app/api/v1";
 import { Trainee } from "./interface";
 
 export const fetchTraineeData = async (): Promise<Trainee[] | null> => {
   try {
     // Replace with your actual API endpoint
+    console.log(`${URL}/trainees`);
+
     const response = await axios.get(`${URL}/trainees`);
     return response.data as Trainee[];
   } catch (error) {
@@ -103,5 +105,26 @@ export const addTrainee = async (
       };
     }
     return { error: "Unknown error", detail: "" };
+  }
+};
+export const downloadPDF = async () => {
+  try {
+    const response = await axios.get(`${URL}/generate-pdf`, {
+      responseType: "blob", // Important to get binary data
+    });
+
+    const url = window.URL.createObjectURL(
+      new Blob([response.data], { type: "application/pdf" })
+    );
+    const link = document.createElement("a");
+    link.href = url;
+    const current_date = new Date().toISOString().split("T")[0];
+    link.setAttribute("download", `דוח מתאמנים - ${current_date}.pdf`); // Download filename
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.URL.revokeObjectURL(url); // Cleanup the object URL
+  } catch (error) {
+    console.error("Failed to download PDF:", error);
   }
 };

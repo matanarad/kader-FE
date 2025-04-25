@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { TraineeCard } from "../components/TraineeCard/TraineeCard";
 import { Trainee } from "../interface";
 import "./HomePage.css";
@@ -118,10 +118,41 @@ const HomePage: React.FC = () => {
     }
     return matchesSearch && matchesDaysFilter;
   });
+  const timerRef = useRef<number | null>(null);
+
+  const handleLongPress = () => {
+    navigate(
+      `/scan/${
+        selectedDate === ""
+          ? new Date().toISOString().split("T")[0]
+          : selectedDate + "F"
+      }`
+    );
+  };
+
+  const startPress = () => {
+    // Start timer when press starts
+    timerRef.current = setTimeout(handleLongPress, 1000);
+  };
+
+  const cancelPress = () => {
+    // Cancel if press ends early
+    if (timerRef.current !== null) {
+      clearTimeout(timerRef.current);
+    }
+  };
 
   return (
     <div className="home-page">
-      <div className="content-after-logo">
+      <div
+        className="content-after-logo"
+        onMouseDown={startPress}
+        onMouseUp={cancelPress}
+        onMouseLeave={cancelPress}
+        onTouchStart={startPress}
+        onTouchEnd={cancelPress}
+        onDoubleClick={() => {}}
+      >
         <h2>ברוכים הבאים למערכת קד"ר</h2>
         <div dir="rtl" className="welcome-text">
           כאן ניתן לראות את רשימת המתאמנים.
@@ -184,13 +215,6 @@ const HomePage: React.FC = () => {
         className="floating-plus-button"
         onClick={() => {
           handleDownloadPDF();
-          // navigate(
-          //   `/scan/${
-          //     selectedDate === ""
-          //       ? new Date().toISOString().split("T")[0]
-          //       : selectedDate + "F"
-          //   }`
-          // )
         }}
       >
         <img src={downloadIcon} style={{ width: "50%" }} />
