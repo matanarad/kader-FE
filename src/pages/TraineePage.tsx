@@ -104,7 +104,9 @@ const TraineePage: React.FC = () => {
                 const countryCode = "+972"; // Change to your country's code
                 const formattedNumber = trainee.phone_number.replace(/^0/, ""); // Remove leading zero
                 window.open(
-                  `https://wa.me/${countryCode}${formattedNumber}`,
+                  `https://wa.me/${countryCode}${formattedNumber}?text=${encodeURIComponent(
+                    "אהלן גבר מה קורה?\nחסרת לי השבוע הכל טוב?"
+                  )}`,
                   "_blank"
                 );
               } else {
