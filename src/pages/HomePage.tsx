@@ -85,8 +85,9 @@ const HomePage: React.FC = () => {
           const maxDays = Math.max(
             ...data.map((trainee) => getDaysSinceLastLog(trainee))
           );
-          setMaxDaysSinceLog(Math.min(maxDays, 100)); // Cap at 100 days for usability
-          setDaysFilterValue(Math.min(maxDays, 100));
+
+          setDaysFilterValue(7);
+          setMaxDaysSinceLog(Math.min(maxDays, 31));
         }
       }
     };
