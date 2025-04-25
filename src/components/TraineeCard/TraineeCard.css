@@ -4,11 +4,11 @@
   padding: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
   width: 70vw;
-
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-direction: column; /* Optional, if you want vertical stacking */
+  flex-direction: column;
+  position: relative;
 }
 
 .name-button {
@@ -23,7 +23,35 @@
   font-weight: bold;
   border-radius: 10px;
   width: 80%;
-
   justify-content: center;
   align-items: center;
+  margin-bottom: 10px;
+}
+
+.days-badge {
+  background-color: #f3f4f6;
+  color: #2b3a6d;
+  font-weight: bold;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Added to center text vertically and horizontally */
+  gap: 1vw;
+}
+
+.days-badge-recent {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+.days-badge-warning {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.days-badge-alert {
+  background-color: #fee2e2;
+  color: #b91c1c;
 }

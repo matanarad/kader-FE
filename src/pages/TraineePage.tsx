@@ -168,7 +168,7 @@ const TraineePage: React.FC = () => {
             className="run-input"
           />
           <button type="submit" className="add-button">
-            הוסף ריצה
+            הוסף ריצת 2000
           </button>
         </form>
       </div>

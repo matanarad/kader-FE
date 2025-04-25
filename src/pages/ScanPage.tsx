@@ -15,7 +15,10 @@ const ScanPage: React.FC = () => {
   // const [trainee, setTrainee] = useState<Trainee | false>(false);
   const [state, setState] = useState<string | false>(false);
   useEffect(() => {
-    if (state === "update") navigate(`/trainee/${tagId}`);
+    if (state === "update") {
+      const today = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
+      navigate(`/trainee/${tagId}/${today}`);
+    }
   }, [state]);
   return (
     <div className="add-page">
