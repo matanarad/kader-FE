@@ -2,12 +2,11 @@ import React, { useEffect, useState } from "react";
 import { TraineeCard } from "../components/TraineeCard/TraineeCard";
 import { Trainee } from "../interface";
 import "./HomePage.css";
-import plusIcon from "../img/plus.svg";
+import downloadIcon from "../img/downloadIcon.svg";
 import dateIcon from "../img/date.svg";
 import { useParams, useNavigate } from "react-router-dom";
-import { fetchTraineeData } from "../api";
+import { fetchTraineeData, downloadPDF } from "../api";
 import filterIcon from "../img/filter.svg";
-
 const HomePage: React.FC = () => {
   const { date } = useParams<{ date: string }>();
   const navigate = useNavigate();
@@ -93,7 +92,11 @@ const HomePage: React.FC = () => {
     };
     getTraineeData();
   }, []);
+  const handleDownloadPDF = async () => {
+    const pdf = await downloadPDF();
 
+    return pdf;
+  };
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedDate(e.target.value);
   };
@@ -179,17 +182,18 @@ const HomePage: React.FC = () => {
 
       <div
         className="floating-plus-button"
-        onClick={() =>
-          navigate(
-            `/scan/${
-              selectedDate === ""
-                ? new Date().toISOString().split("T")[0]
-                : selectedDate + "F"
-            }`
-          )
-        }
+        onClick={() => {
+          handleDownloadPDF();
+          // navigate(
+          //   `/scan/${
+          //     selectedDate === ""
+          //       ? new Date().toISOString().split("T")[0]
+          //       : selectedDate + "F"
+          //   }`
+          // )
+        }}
       >
-        <img src={plusIcon} style={{ width: "50%" }} />
+        <img src={downloadIcon} style={{ width: "50%" }} />
       </div>
       <div className="floating-filter-container">
         <div
